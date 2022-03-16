@@ -6,21 +6,20 @@ interface ColumnProps {
 
 interface ColumnState {
   isEdit?: boolean;
-  title?: string
+  columnTitle?: string;
 }
 
-class Column extends Component<ColumnProps, ColumnState> {
+class Column extends React.Component<ColumnProps, ColumnState> {
   constructor(props?: any) {
     super(props);
     this.state = {
       isEdit: false,
-      title: this.props.title
+      columnTitle: this.props.title
     }
-    this.titleEdit = this.titleEdit.bind(this);
   }
 
   titleEdit = (e?: any) => {
-    this.setState({title: e.target.value})
+    this.setState({columnTitle: e.target.value})
   }
 
   titleEditBtn = () => {
@@ -32,18 +31,16 @@ class Column extends Component<ColumnProps, ColumnState> {
   render(){
     const isEdit = this.state.isEdit;
     const title = (isEdit)
-                    ?<textarea className="column-title-textarea" value={this.state.title} onChange={this.titleEdit}></textarea>
-                    :<h2 className="column-title-textarea">{this.state.title}</h2>;
+                    ?<input type="text" className="column-title-text" value={this.state.columnTitle} onChange={this.titleEdit}></input>
+                    :<h2 className="column-title-text">{this.state.columnTitle}</h2>;
+
     return (
       <div className="column">
         <div className="column-title">
           {title}
           <button className="column-title-btn" onClick={this.titleEditBtn}>{isEdit ? "Сохранить" : "Изменить"}</button>
         </div>
-        <div className="column-cards">
-          {this.props.children}
-        </div>
-        <button className="column-btn"></button>
+        {this.props.children}
       </div>
     )
   }
