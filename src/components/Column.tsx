@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 interface ColumnProps {
   title?: string;
@@ -31,7 +31,7 @@ class Column extends React.Component<ColumnProps, ColumnState> {
   render(){
     const isEdit = this.state.isEdit;
     const title = (isEdit)
-                    ?<input type="text" className="column-title-text" value={this.state.columnTitle} onChange={this.titleEdit}></input>
+                    ?<input type="text" className="column-title-input" value={this.state.columnTitle} onChange={this.titleEdit}></input>
                     :<h2 className="column-title-text">{this.state.columnTitle}</h2>;
 
     return (
