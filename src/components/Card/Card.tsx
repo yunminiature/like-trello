@@ -27,7 +27,7 @@ const Card: React.FC<{
 
   const title = (isEditTitle)
     ?<input type="text" value={cardTitle} onChange={editTitle}></input>
-    :<h2>{cardTitle}</h2>;
+    :<h3>{cardTitle}</h3>;
 
   const [cardDescription, setCardDescription] = useState(props.cardDescription)
   const editDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ const Card: React.FC<{
 
   const description = (isEditDescription)
     ?<input type="text" value={cardDescription} onChange={editDescription}></input>
-    :<h2>{cardDescription}</h2>;
+    :<h3>{cardDescription}</h3>;
 
   const [isOpen, setIsOpen] = useState(false)
   const openBtn = () => {
@@ -50,8 +50,8 @@ const Card: React.FC<{
 
   const card = (!isDelete) &&
     <CardStyle key={props.cardId} onClick={openBtn}>
-      <h3 className="column-cards-card-title">{title}</h3>
-      <p className="column-cards-card-description">{description}</p>
+      {title}
+      {description}
       <p className="column-cards-card-comments">Комментарии: </p>
     </CardStyle>
 

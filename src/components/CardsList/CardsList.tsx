@@ -8,11 +8,23 @@ const CardList: React.FC<{
   username: string;
 }> = (props) => {
 
-  const cards = [
+  const [cards, addCard] = useState([
     { cardId: 0, columnId: 1, cardTitle: 'Накопить на слона', cardDescription: '', cardAuthor:'noname'},
     { cardId: 1, columnId: 3, cardTitle: 'Выбрать слона', cardDescription: '', cardAuthor:'noname'},
     { cardId: 2, columnId: 0, cardTitle: 'Купить слона', cardDescription: '', cardAuthor:'noname'},
-  ];
+  ]);
+
+  const saveBtn = () => {
+    addCard(
+      [...cards, {
+        cardId: cards[cards.length - 1].cardId+1,
+        columnId: props.cardListId,
+        cardTitle: cardTitle,
+        cardDescription: cardDescription,
+        cardAuthor:props.username
+      }]
+    )
+  }
 
   const cardsList = cards.map(card =>
     (props.cardListId===card.columnId) &&
@@ -36,41 +48,28 @@ const CardList: React.FC<{
   }
 
   const [cardDescription, setCardDescription] = useState("")
-  const addCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => { //я же могу как-то объединить addCardTitle и addCardDescription? или нет...
+  const addCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardDescription(e.target.value);
-  }
-
-  const [isSave, setIsSave] = useState(false)
-  const saveBtn = () => {
-    setIsSave(true); //поняла почему баг с добавлением второй карточки, но пока не придумала как его решитьб
   }
 
   const addingCard = (isAdd) &&
     <AddingCard>
-      <label>
-        Название:
-        <input type="text" value={cardTitle} onChange={addCardTitle}></input>
-      </label>
-      <label>
-        Описание:
-        <input type="text" value={cardDescription} onChange={addCardDescription}></input>
-      </label>
+      <form>
+        <label>
+          Название:
+          <input type="text" value={cardTitle} onChange={addCardTitle}></input>
+        </label>
+        <label>
+          Описание:
+          <input type="text" value={cardDescription} onChange={addCardDescription}></input>
+        </label>
+      </form>
       <button onClick={saveBtn}>Сохранить карточку</button>
     </AddingCard>
-
-  const newCard = (isSave) &&
-    <Card
-      cardId={cards[cards.length - 1].cardId+1}
-      cardTitle={cardTitle}
-      cardDescription={cardDescription}
-      cardAuthor={props.username}
-      currentUser={props.username}
-    />
 
   return(
     <Cards>
       {cardsList}
-      {newCard}
       {addingCard}
       <AddBtn onClick={addBtn}>{isAdd ? "Отменить" : "Создать карточку"}</AddBtn>
     </Cards>

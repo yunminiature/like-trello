@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 const Username: React.FC<{
   username: string;
-  useUsername: any; // any потому что пока не поняла какой тут тип, потом исправлю
-  useIsUse: any;
+  useUsername: (name:string) => void;
+  useIsUse: () => void;
 }> = (props) => {
 
   const usernameToBoard = (e: React.ChangeEvent<HTMLInputElement>) => {
