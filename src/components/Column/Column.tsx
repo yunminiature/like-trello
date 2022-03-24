@@ -1,9 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-const Column: React.FC<{
+import DefaultInput from '../DefaultInput';
+import DefaultButton from '../DefaultButton';
+
+interface ColumnProps{
+  columnId: number;
   columnTitle: string;
-}> = (props) => {
+  editColumns: (id: number, title: string) => void;
+}
+
+const Column: React.FC<ColumnProps> = (props) => {
 
   const [columnTitle, setColumnTitle] = useState(props.columnTitle)
   const editColumnTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,20 +18,24 @@ const Column: React.FC<{
   }
 
   const [isEdit, setIsEdit] = useState(false)
-  const editBtn = () => {
+  const toggleIsEdit = () => {
+    (isEdit) && props.editColumns(props.columnId, columnTitle)
     setIsEdit(!isEdit);
   }
 
   const title = (isEdit)
-    ?<input type="text" value={columnTitle} onChange={editColumnTitle}></input>
-    :<h2>{columnTitle}</h2>;
+    ?<ColumnTitle>
+      <DefaultInput inputType="text" inputValue={columnTitle} inputOnChange={editColumnTitle}/>
+      <DefaultButton buttonOnClick={toggleIsEdit} buttonValue={isEdit ? "Сохранить" : "Изменить"}/>
+     </ColumnTitle>
+    :<ColumnTitle>
+      <h2>{columnTitle}</h2>
+      <DefaultButton buttonOnClick={toggleIsEdit} buttonValue={isEdit ? "Сохранить" : "Изменить"}/>
+     </ColumnTitle>;
 
   return (
     <ColumnElement>
-      <div>
-        {title}
-        <button onClick={editBtn}>{isEdit ? "Сохранить" : "Изменить"}</button>
-      </div>
+      {title}
       {props.children}
     </ColumnElement>
   )
@@ -32,40 +43,25 @@ const Column: React.FC<{
 
 const ColumnElement = styled.div`
   width: 20%;
+  }
+`
+const ColumnTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 
-  div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  h2{
+    min-width: 110px;
+    margin: 20px 0;
+    padding: 5px 0;
+    font-size: 20px;
+    line-height: 20px;
+    color: #6e60ff;
+  }
 
-    input, h2, button {
-      min-width: 110px;
-      border: 0px;
-      border-radius: 10px;
-      font-family: consolas;
-    }
-
-    input, h2{
-      margin: 20px 0;
-      padding: 5px 0;
-      font-size: 20px;
-      line-height: 20px;
-      color: #6e60ff;
-    }
-
-    input{
-      margin: 18px 0;
-    }
-
-    button{
-      padding: 12px 20px;
-      font-size: 16px;
-      line-height: 16px;
-      text-align: left;
-      color: #fff;
-      background-color: #6e60ff;
-    }
+  input{
+    font-weight: 600;
   }
 `
 

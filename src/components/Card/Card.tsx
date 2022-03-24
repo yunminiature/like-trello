@@ -1,75 +1,140 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-const Card: React.FC<{
+import CommentsList from '../CommentsList';
+import DefaultModal from '../DefaultModal';
+import DefaultSection from '../DefaultSection';
+import DefaultInput from '../DefaultInput';
+import DefaultButton from '../DefaultButton';
+
+interface CardProps{
   cardId: number;
   cardTitle: string;
   cardDescription: string;
   cardAuthor: string;
+  deleteCard: (cardId: number) => void;
   currentUser: string;
-}> = (props) => {
+}
 
-  const [isDelete, setIsDelete] = useState(false)
-  const deleteBtn = () => {
-    setIsDelete(true);
-    setIsOpen(false);
+const Card: React.FC<CardProps> = (props) => {
+
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleIsOpen = () => {
+    setIsOpen(!isOpen);
+  }
+
+  const deleteCard = () =>{
+    props.deleteCard(props.cardId)
   }
 
   const [cardTitle, setCardTitle] = useState(props.cardTitle)
   const editTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardTitle(e.target.value);
   }
-
   const [isEditTitle, setIsEditTitle] = useState(false)
-  const editTitleBtn = () => {
+  const toggleIsEditTitle = () => {
     setIsEditTitle(!isEditTitle);
   }
-
-  const title = (isEditTitle)
-    ?<input type="text" value={cardTitle} onChange={editTitle}></input>
-    :<h3>{cardTitle}</h3>;
 
   const [cardDescription, setCardDescription] = useState(props.cardDescription)
   const editDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardDescription(e.target.value);
   }
-
   const [isEditDescription, setIsEditDescription] = useState(false)
-  const editDescriptionBtn = () => {
+  const toggleIsEditDescription = () => {
     setIsEditDescription(!isEditDescription);
   }
 
-  const description = (isEditDescription)
-    ?<input type="text" value={cardDescription} onChange={editDescription}></input>
-    :<h3>{cardDescription}</h3>;
-
-  const [isOpen, setIsOpen] = useState(false)
-  const openBtn = () => {
-    setIsOpen(!isOpen);
+  const [comments, setComments] = useState([
+    {
+      cardId: 0,
+      cardCommentId: 0,
+      cardCommentAuthor: 'noname',
+      cardCommentText: 'Сколько стоит слон?',
+    },
+    {
+      cardId: 0,
+      cardCommentId: 1,
+      cardCommentAuthor: 'noname',
+      cardCommentText: 'Много.',
+    },
+    {
+      cardId: 1,
+      cardCommentId: 2,
+      cardCommentAuthor: 'noname',
+      cardCommentText: 'Выбрал индийского',
+    }
+  ]);
+  const addComments = (commentText: string) => {
+    setComments(
+      [...comments, {
+        cardId: props.cardId,
+        cardCommentId: comments[comments.length - 1].cardCommentId+1,
+        cardCommentAuthor: props.currentUser,
+        cardCommentText: commentText
+      }]
+    )
+  }
+  const deleteComments = (commentId: number) => {
+    setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)])
   }
 
-  const card = (!isDelete) &&
-    <CardStyle key={props.cardId} onClick={openBtn}>
-      {title}
-      {description}
-      <p className="column-cards-card-comments">Комментарии: </p>
+  const title = (isEditTitle)
+    ?<DefaultSection>
+      <h3>Название: </h3>
+      <DefaultInput inputType="text" inputValue={cardTitle} inputOnChange={editTitle}/>
+      <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
+     </DefaultSection>
+    :<DefaultSection>
+      <h3>Название: </h3>
+      <p>{cardTitle}</p>
+      <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
+     </DefaultSection>;
+
+  const description = (isEditDescription)
+    ?<DefaultSection>
+      <h3>Описание: </h3>
+      <DefaultInput inputType="text" inputValue={cardDescription} inputOnChange={editDescription}/>
+      <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
+     </DefaultSection>
+    :<DefaultSection>
+      <h3>Описание: </h3>
+      <p>{cardDescription}</p>
+      <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
+     </DefaultSection>;
+
+  const card =
+    <CardStyle onClick={toggleIsOpen}>
+      <CardTitle>{cardTitle}</CardTitle>
+      <CardDescription>{cardDescription}</CardDescription>
+      <CardComments>Комментарии: </CardComments>
     </CardStyle>
 
-  const opencard = (isOpen) &&
-  <OpenCard>
-    <button onClick={openBtn}>Закрыть</button>
-    {cardTitle}
-    <button onClick={editTitleBtn}>{isEditTitle ? "Сохранить" : "Изменить"}</button>
-    {cardDescription}
-    <button onClick={editDescriptionBtn}>{isEditDescription ? "Сохранить" : "Изменить"}</button>
-    <p>{props.cardAuthor}</p>
-    <button onClick={deleteBtn}>Удалить</button>
-  </OpenCard>
+  const openСard = (isOpen) &&
+  <DefaultModal>
+    <OpenCard>
+      <DefaultButton buttonOnClick={toggleIsOpen} buttonValue="Закрыть"/>
+      {title}
+      {description}
+      <DefaultSection>
+        <h3>Автор: </h3>
+        <p>{props.cardAuthor}</p>
+      </DefaultSection>
+      <CommentsList
+        cardId={props.cardId}
+        cardComments={comments}
+        addCardComments={addComments}
+        deleteCardComments={deleteComments}
+        currentUser={props.currentUser}
+      />
+      <DefaultButton buttonOnClick={deleteCard} buttonValue="Удалить"/>
+    </OpenCard>
+  </DefaultModal>
 
   return(
     <>
       {card}
-      {opencard}
+      {openСard}
     </>
   )
 }
@@ -80,18 +145,29 @@ const CardStyle = styled.li`
   border-radius: 10px;
   background-color: #fff;
   color: #555;
-
-  h3{
-    margin: 0 0 10px;
-  }
-
-  p{
-    margin: 0 0 10px;
-  }
+`
+const CardTitle = styled.h3`
+  margin: 0 0 10px;
+`
+const CardDescription = styled.p`
+  margin: 0 0 10px;
+`
+const CardComments = styled.p`
+  margin: 0 0 10px;
 `
 
 const OpenCard = styled.div`
-
+  width: 50%;
+  margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 20px;
+  border-left: 5px solid #6e60ff;
+  border-radius: 10px;
+  background-color: #f6f9fb;
+  color: #555;
+  font-family: consolas;
 `
 
 export default Card;

@@ -1,44 +1,54 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-import Card from '../Card/Card';
+import Card from '../Card';
+import DefaultInput from '../DefaultInput';
+import DefaultButton from '../DefaultButton';
 
-const CardList: React.FC<{
+interface CardListProps{
   cardListId: number;
-  username: string;
-}> = (props) => {
+  userName: string;
+}
 
-  const [cards, addCard] = useState([
-    { cardId: 0, columnId: 1, cardTitle: 'Накопить на слона', cardDescription: '', cardAuthor:'noname'},
-    { cardId: 1, columnId: 3, cardTitle: 'Выбрать слона', cardDescription: '', cardAuthor:'noname'},
-    { cardId: 2, columnId: 0, cardTitle: 'Купить слона', cardDescription: '', cardAuthor:'noname'},
+const CardList: React.FC<CardListProps> = (props) => {
+
+  const [cards, setCard] = useState([
+    { cardId: 0,
+      columnId: 1,
+      cardTitle: 'Накопить на слона',
+      cardDescription: '',
+      cardAuthor:'noname'
+    },
+    { cardId: 1,
+      columnId: 3,
+      cardTitle: 'Выбрать слона',
+      cardDescription: '',
+      cardAuthor:'noname'
+    },
+    { cardId: 2,
+      columnId: 0,
+      cardTitle: 'Купить слона',
+      cardDescription: '',
+      cardAuthor:'noname'
+    },
   ]);
-
-  const saveBtn = () => {
-    addCard(
+  const addCard = () => {
+    setCard(
       [...cards, {
         cardId: cards[cards.length - 1].cardId+1,
         columnId: props.cardListId,
         cardTitle: cardTitle,
         cardDescription: cardDescription,
-        cardAuthor:props.username
+        cardAuthor:props.userName
       }]
     )
   }
-
-  const cardsList = cards.map(card =>
-    (props.cardListId===card.columnId) &&
-      <Card
-        cardId={card.cardId}
-        cardTitle={card.cardTitle}
-        cardDescription={card.cardDescription}
-        cardAuthor={card.cardAuthor}
-        currentUser={props.username}
-      />
-  )
+  const deleteCard = (cardId: number) => {
+    setCard([...cards.slice(0, cardId), ...cards.slice(cardId + 1)])
+  }
 
   const [isAdd, setIsAdd] = useState(false)
-  const addBtn = () => {
+  const toggleIsAdd = () => {
     setIsAdd(!isAdd);
   }
 
@@ -52,28 +62,39 @@ const CardList: React.FC<{
     setCardDescription(e.target.value);
   }
 
-  const addingCard = (isAdd) &&
-    <AddingCard>
+  const cardsList = cards.map(card =>
+    (props.cardListId===card.columnId) &&
+      <Card
+        cardId={card.cardId}
+        cardTitle={card.cardTitle}
+        cardDescription={card.cardDescription}
+        cardAuthor={card.cardAuthor}
+        deleteCard={deleteCard}
+        currentUser={props.userName}
+      />
+  )
+
+  const newCard = (isAdd) &&
+    <NewCard>
       <form>
         <label>
           Название:
-          <input type="text" value={cardTitle} onChange={addCardTitle}></input>
+          <DefaultInput inputType="text" inputValue={cardTitle} inputOnChange={addCardTitle}/>
         </label>
         <label>
           Описание:
-          <input type="text" value={cardDescription} onChange={addCardDescription}></input>
+          <DefaultInput inputType="text" inputValue={cardDescription} inputOnChange={addCardDescription}/>
         </label>
       </form>
-      <button onClick={saveBtn}>Сохранить карточку</button>
-    </AddingCard>
+      <DefaultButton buttonOnClick={addCard} buttonValue="Сохранить карточку"/>
+    </NewCard>
 
   return(
     <Cards>
       {cardsList}
-      {addingCard}
-      <AddBtn onClick={addBtn}>{isAdd ? "Отменить" : "Создать карточку"}</AddBtn>
+      {newCard}
+      <DefaultButton buttonOnClick={toggleIsAdd} buttonValue={isAdd ? "Отменить" : "Создать карточку"}/>
     </Cards>
-
   )
 }
 
@@ -81,48 +102,21 @@ const Cards = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
+
+  button {
+    margin: 20px 0 0;
+  }
 `
 
-const AddingCard = styled.div`
+const NewCard = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   margin: 20px 0 0 0;
+  color: #555;
   font-size: 18px;
   line-height: 18px;
-
-  label{
-
-    input{
-      width: 100%;
-      margin: 20px 0 0 0;
-      padding: 10px;
-      font-size: 18px;
-      line-height: 18px;
-    };
-  };
-
-  button{
-    width: 100%;
-    margin: 20px 0 0 0;
-    border: 0px;
-    border-radius: 10px;
-    font-size: 16px;
-    line-height: 16px;
-    background-color: #6e60ff;
-    color: #fff;
-  };
-`
-
-const AddBtn = styled.div`
-  margin: 20px 0;
-  padding: 12px 20px;
-  border: 0px;
-  border-radius: 10px;
-  font-size: 16px;
-  line-height: 16px;
-  background-color: #6e60ff;
-  color: #fff;
+  font-family: consolas;
 `
 
 export default CardList;

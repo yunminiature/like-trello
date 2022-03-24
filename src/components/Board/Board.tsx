@@ -1,55 +1,68 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
+import DefaultModal from '../DefaultModal';
 import Column from '../Column';
 import CardsList from '../CardsList';
-import Username from '../Username';
+import UserName from '../UserName';
 
 const Board: React.FC = () => {
-  const columns = [
-    {
-      columnId: 0,
-      columnTitle:"ToDo"
-    },
-    {
-      columnId: 1,
-      columnTitle:"InProgress"
-    },
-    {
-      columnId: 2,
-      columnTitle:"Testing"
-    },
-    {
-      columnId: 3,
-      columnTitle:"Done"
-    },
-  ]
 
-  const [username, setUsername] = useState("")
-  const useUsername = (name: string) => {
-    setUsername(name);
+  const [columns, setColumns] = useState((localStorage.getItem("columns")===null)
+    ? [
+       {
+         columnId: 0,
+         columnTitle:"ToDo"
+       },
+       {
+         columnId: 1,
+         columnTitle:"InProgress"
+       },
+       {
+         columnId: 2,
+         columnTitle:"Testing"
+       },
+       {
+         columnId: 3,
+         columnTitle:"Done"
+       },
+     ]
+    : JSON.parse(localStorage.getItem("columns") || "[]")
+   )
+
+  const editColumns = (id: number, title: string) => {
+    columns[id].columnTitle=title;
+    setColumns(columns);
   }
 
-  const [isUse, setIsUse] = useState(false)
-  const useIsUse = () => {
-    setIsUse(true);
+  const [userName, setUserName] = useState("")
+  const addUserName = (name: string) => {
+    setUserName(name);
   }
 
-  const usernamePopUp = (!isUse) &&
-    <Username username={username} useUsername={useUsername} useIsUse={useIsUse}/>
+  const [isAddUserName, setAddUserName] = useState(!(localStorage.getItem("userName")===null))
+  const toggleAddUserName = () => {
+    (userName!=="") && setAddUserName(true);
+    localStorage.setItem("userName", userName);
+  }
 
-  const columnList = (isUse) && columns.map(column =>
-    <Column columnTitle={column.columnTitle}>
-      <CardsList cardListId={column.columnId} username={username}/>
+  const userNamePopUp = (!isAddUserName) &&
+    <DefaultModal>
+      <UserName userName={userName} addUserName={addUserName} toggleAddUserName={toggleAddUserName}/>
+    </DefaultModal>
+
+  const columnList = columns.map((column:{columnId: number; columnTitle:string}) =>
+    <Column key={column.columnId} columnId={column.columnId} columnTitle={column.columnTitle} editColumns={editColumns}>
+      <CardsList cardListId={column.columnId} userName={userName}/>
     </Column>)
 
   return(
     <Body>
       <header>
-        <h1>like-trello</h1>
+        <BoardTitle>like-trello</BoardTitle>
       </header>
       <main>
-        {usernamePopUp}
+        {userNamePopUp}
         {columnList}
       </main>
     </Body>
@@ -57,23 +70,15 @@ const Board: React.FC = () => {
 }
 
 const Body = styled.div`
+  height: 95vh;
   display: flex;
   flex-direction: column;
   background-color: #f6f9fb;
   margin: 0;
   font-family: consolas;
 
-  header{
-    h1{
-      margin: 20px 20px 40px;
-      color: #6e60ff;
-      font-size: 42px;
-      line-height: 42px;
-      font-weight: 800;
-    }
-  }
-
   main{
+    height: 100%;
     margin: 0 20px;
     display: flex;
     flex-direction: row;
@@ -81,6 +86,13 @@ const Body = styled.div`
     align-items: flex-start;
     flex-wrap:wrap;
   }
+`
+const BoardTitle = styled.h1`
+  margin: 20px 20px 40px;
+  color: #6e60ff;
+  font-size: 42px;
+  line-height: 42px;
+  font-weight: 800;
 `
 
 export default Board;

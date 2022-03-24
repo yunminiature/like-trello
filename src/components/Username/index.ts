@@ -1,2 +1,2 @@
-import Username from './Username';
-export default Username;
+import UserName from './UserName';
+export default UserName;
