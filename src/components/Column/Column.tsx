@@ -23,15 +23,13 @@ const Column: React.FC<ColumnProps> = (props) => {
     setIsEdit(!isEdit);
   }
 
-  const title = (isEdit)
-    ?<ColumnTitle>
-      <DefaultInput inputType="text" inputValue={columnTitle} inputOnChange={editColumnTitle}/>
+  const title =
+    <ColumnTitle>
+      {(isEdit)
+      ? <DefaultInput inputType="text" inputValue={columnTitle} inputOnChange={editColumnTitle}/>
+      : <h2>{columnTitle}</h2>}
       <DefaultButton buttonOnClick={toggleIsEdit} buttonValue={isEdit ? "Сохранить" : "Изменить"}/>
-     </ColumnTitle>
-    :<ColumnTitle>
-      <h2>{columnTitle}</h2>
-      <DefaultButton buttonOnClick={toggleIsEdit} buttonValue={isEdit ? "Сохранить" : "Изменить"}/>
-     </ColumnTitle>;
+    </ColumnTitle>
 
   return (
     <ColumnElement>

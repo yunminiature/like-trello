@@ -33,6 +33,8 @@ const Board: React.FC = () => {
   const editColumns = (id: number, title: string) => {
     columns[id].columnTitle=title;
     setColumns(columns);
+    localStorage.setItem("columns", JSON.stringify(columns));
+    console.log(localStorage.getItem("columns"))
   }
 
   const [userName, setUserName] = useState("")
@@ -51,9 +53,16 @@ const Board: React.FC = () => {
       <UserName userName={userName} addUserName={addUserName} toggleAddUserName={toggleAddUserName}/>
     </DefaultModal>
 
-  const columnList = columns.map((column:{columnId: number; columnTitle:string}) =>
-    <Column key={column.columnId} columnId={column.columnId} columnTitle={column.columnTitle} editColumns={editColumns}>
-      <CardsList cardListId={column.columnId} userName={userName}/>
+  const columnList = columns.map((column:{
+    columnId: number;
+    columnTitle:string
+  }) =>
+    <Column
+      key={column.columnId}
+      columnId={column.columnId}
+      columnTitle={column.columnTitle}
+      editColumns={editColumns}>
+      <CardsList cardListId={column.columnId}/>
     </Column>)
 
   return(

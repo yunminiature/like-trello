@@ -6,15 +6,16 @@ interface DefaultButtonProps{
   buttonValue: string;
 }
 
-const DefaultButton: React.FC<DefaultButtonProps> = (props) => {
+const DefaultButton: React.FC<DefaultButtonProps> = ({buttonOnClick, buttonValue}) => {
 
   return(
-    <Button onClick={props.buttonOnClick}>{props.buttonValue}</Button>
+    <Button onClick={buttonOnClick}>{buttonValue}</Button>
   )
 }
 
 const Button = styled.button`
   min-width: 110px;
+  margin: 20px 0 0;
   padding: 12px 20px;
   border: 0px;
   border-radius: 10px;

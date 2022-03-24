@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-const DefaultSection: React.FC<{}> = (props) => {
+const DefaultSection: React.FC = (props) => {
   return(
     <Section>
       {props.children}

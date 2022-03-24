@@ -21,7 +21,7 @@ const Comment: React.FC<CommentProps> = (props) => {
     <CommentStyle>
       <CommentAuthor>{props.cardCommentAuthor}:</CommentAuthor>
       <CommentText>{props.cardCommentText}</CommentText>
-      <DefaultButton buttonOnClick={deleteCardComments} buttonValue="Удалить"/>
+      <CommentButton onClick={deleteCardComments}>Удалить</CommentButton>
     </CommentStyle>
   )
 }
@@ -32,10 +32,6 @@ const CommentStyle = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin: 0 0 20px;
-
-  button{
-    margin: 0 0 0 auto;
-  }
 `
 
 const CommentAuthor = styled.h3`
@@ -45,6 +41,19 @@ const CommentAuthor = styled.h3`
 
 const CommentText = styled.p`
   margin:0;
+`
+const CommentButton = styled.button`
+  margin: 0 0 0 auto;
+  min-width: 110px;
+  padding: 12px 20px;
+  border: 0px;
+  border-radius: 10px;
+  font-family: consolas;
+  font-size: 16px;
+  line-height: 16px;
+  text-align: left;
+  color: #fff;
+  background-color: #6e60ff;
 `
 
 export default Comment;

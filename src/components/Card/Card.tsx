@@ -12,8 +12,9 @@ interface CardProps{
   cardTitle: string;
   cardDescription: string;
   cardAuthor: string;
+  editTitle: (id: number, title: string) => void;
+  editDescription: (id: number, description: string) => void;
   deleteCard: (cardId: number) => void;
-  currentUser: string;
 }
 
 const Card: React.FC<CardProps> = (props) => {
@@ -33,6 +34,7 @@ const Card: React.FC<CardProps> = (props) => {
   }
   const [isEditTitle, setIsEditTitle] = useState(false)
   const toggleIsEditTitle = () => {
+    (isEditTitle) && props.editTitle(props.cardId, cardTitle)
     setIsEditTitle(!isEditTitle);
   }
 
@@ -42,42 +44,49 @@ const Card: React.FC<CardProps> = (props) => {
   }
   const [isEditDescription, setIsEditDescription] = useState(false)
   const toggleIsEditDescription = () => {
+    (isEditDescription) && props.editDescription(props.cardId, cardDescription)
     setIsEditDescription(!isEditDescription);
   }
 
-  const [comments, setComments] = useState([
-    {
-      cardId: 0,
-      cardCommentId: 0,
-      cardCommentAuthor: 'noname',
-      cardCommentText: 'Сколько стоит слон?',
-    },
-    {
-      cardId: 0,
-      cardCommentId: 1,
-      cardCommentAuthor: 'noname',
-      cardCommentText: 'Много.',
-    },
-    {
-      cardId: 1,
-      cardCommentId: 2,
-      cardCommentAuthor: 'noname',
-      cardCommentText: 'Выбрал индийского',
-    }
-  ]);
+  const [comments, setComments] = useState((localStorage.getItem("comments")===null)
+  ? [{
+        cardId: 0,
+        cardCommentId: 0,
+        cardCommentAuthor: 'noname',
+        cardCommentText: 'Сколько стоит слон?',
+      },
+      {
+        cardId: 0,
+        cardCommentId: 1,
+        cardCommentAuthor: 'noname',
+        cardCommentText: 'Много.',
+      },
+      {
+        cardId: 1,
+        cardCommentId: 2,
+        cardCommentAuthor: 'noname',
+        cardCommentText: 'Выбрал индийского',
+      }]
+  : JSON.parse(localStorage.getItem("comments") || "[]")
+);
+
   const addComments = (commentText: string) => {
     setComments(
       [...comments, {
         cardId: props.cardId,
         cardCommentId: comments[comments.length - 1].cardCommentId+1,
-        cardCommentAuthor: props.currentUser,
+        cardCommentAuthor: localStorage.getItem("userName"),
         cardCommentText: commentText
       }]
-    )
+    );
   }
   const deleteComments = (commentId: number) => {
-    setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)])
+    setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
   }
+
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(comments));
+ });
 
   const title = (isEditTitle)
     ?<DefaultSection>
@@ -125,7 +134,6 @@ const Card: React.FC<CardProps> = (props) => {
         cardComments={comments}
         addCardComments={addComments}
         deleteCardComments={deleteComments}
-        currentUser={props.currentUser}
       />
       <DefaultButton buttonOnClick={deleteCard} buttonValue="Удалить"/>
     </OpenCard>

@@ -9,7 +9,6 @@ interface CommentListProps{
   cardComments: {cardId: number, cardCommentId: number, cardCommentAuthor: string, cardCommentText: string}[];
   addCardComments: (commentText: string) => void;
   deleteCardComments: (commentId: number) => void;
-  currentUser: string;
 }
 
 const CommentsList: React.FC<CommentListProps> = (props) => {
@@ -27,10 +26,8 @@ const CommentsList: React.FC<CommentListProps> = (props) => {
   const commentsList = props.cardComments.map(comment =>
     (props.cardId===comment.cardId) &&
       <Comment
-        cardId={comment.cardId}
-        cardCommentId={comment.cardCommentId}
-        cardCommentAuthor={comment.cardCommentAuthor}
-        cardCommentText={comment.cardCommentText}
+        key={comment.cardCommentId}
+        {...comment}
         deleteCardComments={props.deleteCardComments}
       />
   )

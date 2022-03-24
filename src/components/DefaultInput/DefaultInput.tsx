@@ -7,10 +7,10 @@ interface DefaultInputProps{
   inputOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const DefaultInput: React.FC<DefaultInputProps> = (props) => {
+const DefaultInput: React.FC<DefaultInputProps> = ({inputType, inputValue, inputOnChange}) => {
 
   return(
-    <Input type={props.inputType} value={props.inputValue} onChange={props.inputOnChange}/>
+    <Input type={inputType} value={inputValue} onChange={inputOnChange}/>
   )
 }
 
