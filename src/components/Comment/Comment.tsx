@@ -1,7 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-
-import DefaultButton from '../DefaultButton';
 
 interface CommentProps{
   cardId: number,

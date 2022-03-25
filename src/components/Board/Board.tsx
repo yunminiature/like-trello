@@ -1,40 +1,42 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-import DefaultModal from '../DefaultModal';
+import DefaultModal from '../ui/DefaultModal';
 import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
 
 const Board: React.FC = () => {
 
-  const [columns, setColumns] = useState((localStorage.getItem("columns")===null)
-    ? [
-       {
-         columnId: 0,
-         columnTitle:"ToDo"
-       },
-       {
-         columnId: 1,
-         columnTitle:"InProgress"
-       },
-       {
-         columnId: 2,
-         columnTitle:"Testing"
-       },
-       {
-         columnId: 3,
-         columnTitle:"Done"
-       },
-     ]
-    : JSON.parse(localStorage.getItem("columns") || "[]")
-   )
+  useEffect(() => {
+    (localStorage.getItem("columns")===null || localStorage.getItem("columns")==="[]")
+      ? localStorage.setItem("columns", JSON.stringify([
+         {
+           columnId: 0,
+           columnTitle:"ToDo"
+         },
+         {
+           columnId: 1,
+           columnTitle:"InProgress"
+         },
+         {
+           columnId: 2,
+           columnTitle:"Testing"
+         },
+         {
+           columnId: 3,
+           columnTitle:"Done"
+         },
+       ]))
+    : localStorage.setItem("columns", JSON.stringify(columns))
+  });
+
+  const [columns, setColumns] = useState(JSON.parse(localStorage.getItem("columns") || "[]"))
 
   const editColumns = (id: number, title: string) => {
     columns[id].columnTitle=title;
     setColumns(columns);
     localStorage.setItem("columns", JSON.stringify(columns));
-    console.log(localStorage.getItem("columns"))
   }
 
   const [userName, setUserName] = useState("")

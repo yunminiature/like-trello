@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import Comment from '../Comment';
-import DefaultButton from '../DefaultButton';
+import DefaultButton from '../ui/DefaultButton';
 
 interface CommentListProps{
   cardId: number;
@@ -18,9 +18,9 @@ const CommentsList: React.FC<CommentListProps> = (props) => {
     setCommentText(e.target.value);
   }
 
-  const [isAdd, setIsAdd] = useState("")
   const toggleIsAdd = () => {
     props.addCardComments(commentText);
+    setCommentText("");
   }
 
   const commentsList = props.cardComments.map(comment =>

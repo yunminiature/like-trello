@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface DefaultInputProps{
@@ -18,7 +18,7 @@ const Input = styled.input`
   width: 100%;
   min-width: 100px;
   margin: 20px 0;
-  padding: 5px 0;
+  padding: 5px 10px;
   border: 0px;
   border-radius: 10px;
   font-family: consolas;

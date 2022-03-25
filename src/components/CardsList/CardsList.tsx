@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
 import Card from '../Card';
-import DefaultInput from '../DefaultInput';
-import DefaultButton from '../DefaultButton';
+import DefaultInput from '../ui/DefaultInput';
+import DefaultButton from '../ui/DefaultButton';
 
 interface CardListProps{
   cardListId: number;
@@ -11,29 +11,34 @@ interface CardListProps{
 
 const CardList: React.FC<CardListProps> = (props) => {
 
-  const [cards, setCard] = useState((localStorage.getItem("cards")===null)
-  ? [
-      { cardId: 0,
-        columnId: 1,
-        cardTitle: 'Накопить на слона',
-        cardDescription: '',
-        cardAuthor:'noname'
-      },
-      { cardId: 1,
-        columnId: 3,
-        cardTitle: 'Выбрать слона',
-        cardDescription: '',
-        cardAuthor:'noname'
-      },
-      { cardId: 2,
-        columnId: 0,
-        cardTitle: 'Купить слона',
-        cardDescription: '',
-        cardAuthor:'noname'
-      },
-    ]
-  : JSON.parse(localStorage.getItem("cards") || "[]")
-  );
+  useEffect(() => {
+    (localStorage.getItem("cards")===null || localStorage.getItem("cards")==="[]")
+      && localStorage.setItem("cards", JSON.stringify([
+          { cardId: 0,
+            columnId: 1,
+            cardTitle: 'Накопить на слона',
+            cardDescription: '',
+            cardAuthor:'noname',
+            cardCommentsValue: 2,
+          },
+          { cardId: 1,
+            columnId: 3,
+            cardTitle: 'Выбрать слона',
+            cardDescription: '',
+            cardAuthor:'noname',
+            cardCommentsValue: 1,
+          },
+          { cardId: 2,
+            columnId: 0,
+            cardTitle: 'Купить слона',
+            cardDescription: '',
+            cardAuthor:'noname',
+            cardCommentsValue: 0,
+          },
+        ]))
+  })
+
+  const [cards, setCard] = useState(JSON.parse(localStorage.getItem("cards") || "[]"))
 
   const addCard = () => {
     setCard(
@@ -42,27 +47,41 @@ const CardList: React.FC<CardListProps> = (props) => {
         columnId: props.cardListId,
         cardTitle: cardTitle,
         cardDescription: cardDescription,
-        cardAuthor:localStorage.getItem("userName")
+        cardAuthor:localStorage.getItem("userName"),
+        cardCommentsValue: 0
       }]
     )
+    setCardTitle("");
+    setCardDescription("");
   }
   const deleteCard = (cardId: number) => {
     setCard([...cards.slice(0, cardId), ...cards.slice(cardId + 1)])
+    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const editTitle = (id: number, title: string) => {
     cards[id].cardTitle=title;
     setCard(cards);
+    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const editDescription = (id: number, description: string) => {
     cards[id].cardDescription=description;
     setCard(cards);
+    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
-  useEffect(() => {
+  const addCommentsValue = (id: number) => {
+    cards[id].cardCommentsValue++;
+    setCard(cards);
     localStorage.setItem("cards", JSON.stringify(cards));
- });
+  }
+
+  const deleteCommentsValue = (id: number) => {
+    cards[id].cardCommentsValue--;
+    setCard(cards);
+    localStorage.setItem("cards", JSON.stringify(cards));
+  }
 
   const [isAdd, setIsAdd] = useState(false)
   const toggleIsAdd = () => {
@@ -85,11 +104,14 @@ const CardList: React.FC<CardListProps> = (props) => {
     cardTitle: string;
     cardDescription: string;
     cardAuthor:string;
+    cardCommentsValue:number;
   }) =>
     (props.cardListId===card.columnId) &&
       <Card
         key={card.cardId}
         {...card}
+        addCommentsValue={addCommentsValue}
+        deleteCommentsValue={deleteCommentsValue}
         editTitle={editTitle}
         editDescription={editDescription}
         deleteCard={deleteCard}

@@ -2,16 +2,19 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
 import CommentsList from '../CommentsList';
-import DefaultModal from '../DefaultModal';
-import DefaultSection from '../DefaultSection';
-import DefaultInput from '../DefaultInput';
-import DefaultButton from '../DefaultButton';
+import DefaultModal from '../ui/DefaultModal';
+import DefaultSection from '../ui/DefaultSection';
+import DefaultInput from '../ui/DefaultInput';
+import DefaultButton from '../ui/DefaultButton';
 
 interface CardProps{
   cardId: number;
   cardTitle: string;
   cardDescription: string;
   cardAuthor: string;
+  cardCommentsValue: number;
+  addCommentsValue: (id: number) => void;
+  deleteCommentsValue: (id: number) => void;
   editTitle: (id: number, title: string) => void;
   editDescription: (id: number, description: string) => void;
   deleteCard: (cardId: number) => void;
@@ -21,8 +24,16 @@ const Card: React.FC<CardProps> = (props) => {
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleIsOpen = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(true);
   }
+  const toggleIsClose = () => {
+    setIsOpen(false);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      toggleIsClose()
+    }
+  });
 
   const deleteCard = () =>{
     props.deleteCard(props.cardId)
@@ -48,27 +59,29 @@ const Card: React.FC<CardProps> = (props) => {
     setIsEditDescription(!isEditDescription);
   }
 
-  const [comments, setComments] = useState((localStorage.getItem("comments")===null)
-  ? [{
-        cardId: 0,
-        cardCommentId: 0,
-        cardCommentAuthor: 'noname',
-        cardCommentText: 'Сколько стоит слон?',
-      },
-      {
-        cardId: 0,
-        cardCommentId: 1,
-        cardCommentAuthor: 'noname',
-        cardCommentText: 'Много.',
-      },
-      {
-        cardId: 1,
-        cardCommentId: 2,
-        cardCommentAuthor: 'noname',
-        cardCommentText: 'Выбрал индийского',
-      }]
-  : JSON.parse(localStorage.getItem("comments") || "[]")
-);
+  useEffect(() => {
+    (localStorage.getItem("comments")===null || localStorage.getItem("comments")==="[]")
+      && localStorage.setItem("comments", JSON.stringify([{
+            cardId: 0,
+            cardCommentId: 0,
+            cardCommentAuthor: 'noname',
+            cardCommentText: 'Сколько стоит слон?',
+          },
+          {
+            cardId: 0,
+            cardCommentId: 1,
+            cardCommentAuthor: 'noname',
+            cardCommentText: 'Много.',
+          },
+          {
+            cardId: 1,
+            cardCommentId: 2,
+            cardCommentAuthor: 'noname',
+            cardCommentText: 'Выбрал индийского',
+          }]))
+  });
+
+  const [comments, setComments] = useState(JSON.parse(localStorage.getItem("comments") || "[]"))
 
   const addComments = (commentText: string) => {
     setComments(
@@ -79,14 +92,12 @@ const Card: React.FC<CardProps> = (props) => {
         cardCommentText: commentText
       }]
     );
+    props.addCommentsValue(props.cardId)
   }
   const deleteComments = (commentId: number) => {
     setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
+    props.deleteCommentsValue(props.cardId)
   }
-
-  useEffect(() => {
-    localStorage.setItem("comments", JSON.stringify(comments));
- });
 
   const title = (isEditTitle)
     ?<DefaultSection>
@@ -116,13 +127,13 @@ const Card: React.FC<CardProps> = (props) => {
     <CardStyle onClick={toggleIsOpen}>
       <CardTitle>{cardTitle}</CardTitle>
       <CardDescription>{cardDescription}</CardDescription>
-      <CardComments>Комментарии: </CardComments>
+      <CardComments>Комментарии: {props.cardCommentsValue}</CardComments>
     </CardStyle>
 
   const openСard = (isOpen) &&
   <DefaultModal>
     <OpenCard>
-      <DefaultButton buttonOnClick={toggleIsOpen} buttonValue="Закрыть"/>
+      <DefaultButton buttonOnClick={toggleIsClose} buttonValue="Закрыть"/>
       {title}
       {description}
       <DefaultSection>
