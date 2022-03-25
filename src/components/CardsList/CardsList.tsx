@@ -12,7 +12,7 @@ interface CardListProps{
 const CardList: React.FC<CardListProps> = (props) => {
 
   useEffect(() => {
-    (localStorage.getItem("cards")===null || localStorage.getItem("cards")==="[]")
+    (localStorage.getItem("cards")===null)
       && localStorage.setItem("cards", JSON.stringify([
           { cardId: 0,
             columnId: 1,
@@ -36,7 +36,7 @@ const CardList: React.FC<CardListProps> = (props) => {
             cardCommentsValue: 0,
           },
         ]))
-  })
+  },[])
 
   const [cards, setCard] = useState(JSON.parse(localStorage.getItem("cards") || "[]"))
 
@@ -51,36 +51,40 @@ const CardList: React.FC<CardListProps> = (props) => {
         cardCommentsValue: 0
       }]
     )
+    localStorage.setItem("cards", JSON.stringify([...cards, {
+      cardId: cards[cards.length - 1].cardId+1,
+      columnId: props.cardListId,
+      cardTitle: cardTitle,
+      cardDescription: cardDescription,
+      cardAuthor:localStorage.getItem("userName"),
+      cardCommentsValue: 0
+    }]))
     setCardTitle("");
     setCardDescription("");
   }
   const deleteCard = (cardId: number) => {
     setCard([...cards.slice(0, cardId), ...cards.slice(cardId + 1)])
-    localStorage.setItem("cards", JSON.stringify(cards));
+    localStorage.setItem("cards",JSON.stringify([...cards.slice(0, cardId), ...cards.slice(cardId + 1)]))
   }
 
   const editTitle = (id: number, title: string) => {
     cards[id].cardTitle=title;
     setCard(cards);
-    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const editDescription = (id: number, description: string) => {
     cards[id].cardDescription=description;
     setCard(cards);
-    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const addCommentsValue = (id: number) => {
     cards[id].cardCommentsValue++;
     setCard(cards);
-    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const deleteCommentsValue = (id: number) => {
     cards[id].cardCommentsValue--;
     setCard(cards);
-    localStorage.setItem("cards", JSON.stringify(cards));
   }
 
   const [isAdd, setIsAdd] = useState(false)

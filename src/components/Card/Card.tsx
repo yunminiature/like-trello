@@ -79,7 +79,7 @@ const Card: React.FC<CardProps> = (props) => {
             cardCommentAuthor: 'noname',
             cardCommentText: 'Выбрал индийского',
           }]))
-  });
+  },[]);
 
   const [comments, setComments] = useState(JSON.parse(localStorage.getItem("comments") || "[]"))
 
@@ -92,11 +92,18 @@ const Card: React.FC<CardProps> = (props) => {
         cardCommentText: commentText
       }]
     );
-    props.addCommentsValue(props.cardId)
+    props.addCommentsValue(props.cardId);
+    localStorage.setItem("comments", JSON.stringify([...comments, {
+      cardId: props.cardId,
+      cardCommentId: comments[comments.length - 1].cardCommentId+1,
+      cardCommentAuthor: localStorage.getItem("userName"),
+      cardCommentText: commentText
+    }]))
   }
   const deleteComments = (commentId: number) => {
     setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
     props.deleteCommentsValue(props.cardId)
+    localStorage.setItem("comments",JSON.stringify([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]))
   }
 
   const title = (isEditTitle)
