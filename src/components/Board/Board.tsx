@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
-import DefaultModal from '../ui/DefaultModal';
+import DefaultModal from '../../ui/DefaultModal';
 import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
@@ -10,8 +10,8 @@ import {Local} from '../../services/LocalStorage'
 const Board: React.FC = () => {
 
   useEffect(() => {
-    (getColumns()===null)
-      ? setColumns([
+    (Local.getColumns()===null)
+      && Local.setColumns(JSON.stringify([
          {
            columnId: 0,
            columnTitle:"ToDo"
@@ -28,16 +28,15 @@ const Board: React.FC = () => {
            columnId: 3,
            columnTitle:"Done"
          },
-       ])
-    : setColumns(columns)
+       ]))
   },[]);
 
-  const [columns, setColumns] = useState(JSON.parse(getColumns()))
+  const [columns, setColumns] = useState(JSON.parse(Local.getColumns()))
 
   const editColumns = (id: number, title: string) => {
     columns[id].columnTitle=title;
     setColumns(columns);
-    localStorage.setItem("columns", JSON.stringify(columns));
+    Local.setColumns(JSON.stringify(columns));
   }
 
   const [userName, setUserName] = useState("")
@@ -45,10 +44,10 @@ const Board: React.FC = () => {
     setUserName(name);
   }
 
-  const [isAddUserName, setAddUserName] = useState(!(getUserName()===null))
+  const [isAddUserName, setAddUserName] = useState(!(Local.getColumns()===null))
   const toggleAddUserName = () => {
     (userName!=="") && setAddUserName(true);
-    localStorage.setItem("userName", userName);
+    Local.setUserName(userName);
   }
 
   const userNamePopUp = (!isAddUserName) &&

@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import {Local} from '../../services/LocalStorage'
 
 import CommentsList from '../CommentsList';
-import DefaultModal from '../ui/DefaultModal';
-import DefaultSection from '../ui/DefaultSection';
-import DefaultInput from '../ui/DefaultInput';
-import DefaultButton from '../ui/DefaultButton';
+import DefaultModal from '../../ui/DefaultModal';
+import DefaultSection from '../../ui/DefaultSection';
+import DefaultInput from '../../ui/DefaultInput';
+import DefaultButton from '../../ui/DefaultButton';
 
 interface CardProps{
   cardId: number;
@@ -60,8 +61,8 @@ const Card: React.FC<CardProps> = (props) => {
   }
 
   useEffect(() => {
-    (localStorage.getItem("comments")===null || localStorage.getItem("comments")==="[]")
-      && localStorage.setItem("comments", JSON.stringify([{
+    (Local.getComments()===null)
+      && Local.setComments(JSON.stringify([{
             cardId: 0,
             cardCommentId: 0,
             cardCommentAuthor: 'noname',
@@ -81,29 +82,29 @@ const Card: React.FC<CardProps> = (props) => {
           }]))
   },[]);
 
-  const [comments, setComments] = useState(JSON.parse(localStorage.getItem("comments") || "[]"))
+  const [comments, setComments] = useState(JSON.parse(Local.getComments()))
 
   const addComments = (commentText: string) => {
     setComments(
       [...comments, {
         cardId: props.cardId,
         cardCommentId: comments[comments.length - 1].cardCommentId+1,
-        cardCommentAuthor: localStorage.getItem("userName"),
+        cardCommentAuthor: Local.getUserName(),
         cardCommentText: commentText
       }]
     );
     props.addCommentsValue(props.cardId);
-    localStorage.setItem("comments", JSON.stringify([...comments, {
+    Local.setComments(JSON.stringify([...comments, {
       cardId: props.cardId,
       cardCommentId: comments[comments.length - 1].cardCommentId+1,
-      cardCommentAuthor: localStorage.getItem("userName"),
+      cardCommentAuthor: Local.getUserName(),
       cardCommentText: commentText
     }]))
   }
   const deleteComments = (commentId: number) => {
     setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
     props.deleteCommentsValue(props.cardId)
-    localStorage.setItem("comments",JSON.stringify([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]))
+    Local.setComments(JSON.stringify([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]))
   }
 
   const title = (isEditTitle)

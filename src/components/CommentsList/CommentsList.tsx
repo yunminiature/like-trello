@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import Comment from '../Comment';
-import DefaultButton from '../ui/DefaultButton';
+import DefaultButton from '../../ui/DefaultButton';
 
 interface CommentListProps{
   cardId: number;

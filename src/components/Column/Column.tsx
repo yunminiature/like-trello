@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 
-import DefaultInput from '../ui/DefaultInput';
-import DefaultButton from '../ui/DefaultButton';
+import DefaultInput from '../../ui/DefaultInput';
+import DefaultButton from '../../ui/DefaultButton';
 
 interface ColumnProps{
   columnId: number;

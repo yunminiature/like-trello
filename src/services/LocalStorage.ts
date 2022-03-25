@@ -4,32 +4,32 @@ class LocalStorage {
     return localStorage.getItem("userName")
   }
 
-  setUserName(item:[]){
-    return localStorage.setItem("userName", JSON.stringify(item))
+  setUserName(item:string){
+    return localStorage.setItem("userName", item)
   }
 
   getColumns(){
-    return localStorage.getItem("columns")
+    return localStorage.getItem("columns") || ''
   }
 
-  setColumns(item:[]){
-    return localStorage.setItem("columns", JSON.stringify(item))
+  setColumns(item:string){
+    return localStorage.setItem("columns", item)
   }
 
   getCards(){
-    return localStorage.getItem("cards")
+    return localStorage.getItem("cards") || ''
   }
 
-  setCards(item:[]){
-    return localStorage.setItem("cards", JSON.stringify(item))
+  setCards(item:string){
+    return localStorage.setItem("cards", item)
   }
 
   getComments(){
-    return localStorage.getItem("comments")
+    return localStorage.getItem("comments") || ''
   }
 
-  setComments(item:[]){
-    return localStorage.setItem("comments", JSON.stringify(item))
+  setComments(item:string){
+    return localStorage.setItem("comments", item)
   }
 }
 export const Local = new LocalStorage();

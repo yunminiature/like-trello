@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import {Local} from '../../services/LocalStorage'
 
 import Card from '../Card';
-import DefaultInput from '../ui/DefaultInput';
-import DefaultButton from '../ui/DefaultButton';
+import DefaultInput from '../../ui/DefaultInput';
+import DefaultButton from '../../ui/DefaultButton';
 
 interface CardListProps{
   cardListId: number;
@@ -12,8 +13,8 @@ interface CardListProps{
 const CardList: React.FC<CardListProps> = (props) => {
 
   useEffect(() => {
-    (localStorage.getItem("cards")===null)
-      && localStorage.setItem("cards", JSON.stringify([
+    (Local.getCards()===null)
+      && Local.setCards(JSON.stringify([
           { cardId: 0,
             columnId: 1,
             cardTitle: 'Накопить на слона',
@@ -38,7 +39,7 @@ const CardList: React.FC<CardListProps> = (props) => {
         ]))
   },[])
 
-  const [cards, setCard] = useState(JSON.parse(localStorage.getItem("cards") || "[]"))
+  const [cards, setCard] = useState(JSON.parse(Local.getCards()))
 
   const addCard = () => {
     setCard(
@@ -47,24 +48,38 @@ const CardList: React.FC<CardListProps> = (props) => {
         columnId: props.cardListId,
         cardTitle: cardTitle,
         cardDescription: cardDescription,
-        cardAuthor:localStorage.getItem("userName"),
+        cardAuthor:Local.getUserName(),
         cardCommentsValue: 0
       }]
     )
-    localStorage.setItem("cards", JSON.stringify([...cards, {
+    Local.setCards(JSON.stringify([...cards, {
       cardId: cards[cards.length - 1].cardId+1,
       columnId: props.cardListId,
       cardTitle: cardTitle,
       cardDescription: cardDescription,
-      cardAuthor:localStorage.getItem("userName"),
+      cardAuthor:Local.getUserName(),
       cardCommentsValue: 0
     }]))
     setCardTitle("");
     setCardDescription("");
   }
   const deleteCard = (cardId: number) => {
-    setCard([...cards.slice(0, cardId), ...cards.slice(cardId + 1)])
-    localStorage.setItem("cards",JSON.stringify([...cards.slice(0, cardId), ...cards.slice(cardId + 1)]))
+    setCard([...cards.filter((item:{
+      cardId: number;
+      columnId: number;
+      cardTitle: string;
+      cardDescription: string;
+      cardAuthor: string;
+      cardCommentsValue: number;
+    }) => item.cardId !== cardId)])
+    Local.setCards(JSON.stringify([...cards.filter((item:{
+      cardId: number;
+      columnId: number;
+      cardTitle: string;
+      cardDescription: string;
+      cardAuthor: string;
+      cardCommentsValue: number;
+    }) => item.cardId !== cardId)]))
   }
 
   const editTitle = (id: number, title: string) => {
