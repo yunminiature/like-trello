@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 import {Local} from '../../services/LocalStorage'
+import {CardsContext} from '../../contexts/CardsContext'
+
 
 import CommentsList from '../CommentsList';
 import DefaultModal from '../../ui/DefaultModal';
@@ -14,14 +16,17 @@ interface CardProps{
   cardDescription: string;
   cardAuthor: string;
   cardCommentsValue: number;
-  addCommentsValue: (id: number) => void;
-  deleteCommentsValue: (id: number) => void;
-  editTitle: (id: number, title: string) => void;
-  editDescription: (id: number, description: string) => void;
-  deleteCard: (cardId: number) => void;
 }
 
-const Card: React.FC<CardProps> = (props) => {
+const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
+
+  const {
+    deleteCard,
+    editTitle,
+    editDescription,
+    addCommentsValue,
+    deleteCommentsValue,
+  } = useContext(CardsContext);
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleIsOpen = () => {
@@ -36,106 +41,59 @@ const Card: React.FC<CardProps> = (props) => {
     }
   });
 
-  const deleteCard = () =>{
-    props.deleteCard(props.cardId)
+  const toggleDeleteCard = () =>{
+    deleteCard(cardId)
   }
 
-  const [cardTitle, setCardTitle] = useState(props.cardTitle)
-  const editTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardTitle(e.target.value);
+  const [editCardTitle, setEditCardTitle] = useState(cardTitle)
+  const toggleEditCardTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditCardTitle(e.target.value);
   }
   const [isEditTitle, setIsEditTitle] = useState(false)
   const toggleIsEditTitle = () => {
-    (isEditTitle) && props.editTitle(props.cardId, cardTitle)
+    (isEditTitle) && editTitle(cardId, editCardTitle)
     setIsEditTitle(!isEditTitle);
   }
 
-  const [cardDescription, setCardDescription] = useState(props.cardDescription)
-  const editDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardDescription(e.target.value);
+  const [editCardDescription, setEditCardDescription] = useState(cardDescription)
+  const toggleEditCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditCardDescription(e.target.value);
   }
   const [isEditDescription, setIsEditDescription] = useState(false)
   const toggleIsEditDescription = () => {
-    (isEditDescription) && props.editDescription(props.cardId, cardDescription)
+    (isEditDescription) && editDescription(cardId, editCardDescription)
     setIsEditDescription(!isEditDescription);
-  }
-
-  useEffect(() => {
-    (Local.getComments()===null)
-      && Local.setComments(JSON.stringify([{
-            cardId: 0,
-            cardCommentId: 0,
-            cardCommentAuthor: 'noname',
-            cardCommentText: 'Сколько стоит слон?',
-          },
-          {
-            cardId: 0,
-            cardCommentId: 1,
-            cardCommentAuthor: 'noname',
-            cardCommentText: 'Много.',
-          },
-          {
-            cardId: 1,
-            cardCommentId: 2,
-            cardCommentAuthor: 'noname',
-            cardCommentText: 'Выбрал индийского',
-          }]))
-  },[]);
-
-  const [comments, setComments] = useState(JSON.parse(Local.getComments()))
-
-  const addComments = (commentText: string) => {
-    setComments(
-      [...comments, {
-        cardId: props.cardId,
-        cardCommentId: comments[comments.length - 1].cardCommentId+1,
-        cardCommentAuthor: Local.getUserName(),
-        cardCommentText: commentText
-      }]
-    );
-    props.addCommentsValue(props.cardId);
-    Local.setComments(JSON.stringify([...comments, {
-      cardId: props.cardId,
-      cardCommentId: comments[comments.length - 1].cardCommentId+1,
-      cardCommentAuthor: Local.getUserName(),
-      cardCommentText: commentText
-    }]))
-  }
-  const deleteComments = (commentId: number) => {
-    setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
-    props.deleteCommentsValue(props.cardId)
-    Local.setComments(JSON.stringify([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]))
   }
 
   const title = (isEditTitle)
     ?<DefaultSection>
       <h3>Название: </h3>
-      <DefaultInput inputType="text" inputValue={cardTitle} inputOnChange={editTitle}/>
+      <DefaultInput inputType="text" inputValue={editCardTitle} inputOnChange={toggleEditCardTitle}/>
       <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
      </DefaultSection>
     :<DefaultSection>
       <h3>Название: </h3>
-      <p>{cardTitle}</p>
+      <p>{editCardTitle}</p>
       <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
      </DefaultSection>;
 
   const description = (isEditDescription)
     ?<DefaultSection>
       <h3>Описание: </h3>
-      <DefaultInput inputType="text" inputValue={cardDescription} inputOnChange={editDescription}/>
+      <DefaultInput inputType="text" inputValue={editCardDescription} inputOnChange={toggleEditCardDescription}/>
       <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
      </DefaultSection>
     :<DefaultSection>
       <h3>Описание: </h3>
-      <p>{cardDescription}</p>
+      <p>{editCardDescription}</p>
       <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
      </DefaultSection>;
 
   const card =
     <CardStyle onClick={toggleIsOpen}>
-      <CardTitle>{cardTitle}</CardTitle>
-      <CardDescription>{cardDescription}</CardDescription>
-      <CardComments>Комментарии: {props.cardCommentsValue}</CardComments>
+      <CardTitle>{editCardTitle}</CardTitle>
+      <CardDescription>{editCardDescription}</CardDescription>
+      <CardComments>Комментарии: {cardCommentsValue}</CardComments>
     </CardStyle>
 
   const openСard = (isOpen) &&
@@ -146,15 +104,12 @@ const Card: React.FC<CardProps> = (props) => {
       {description}
       <DefaultSection>
         <h3>Автор: </h3>
-        <p>{props.cardAuthor}</p>
+        <p>{cardAuthor}</p>
       </DefaultSection>
       <CommentsList
-        cardId={props.cardId}
-        cardComments={comments}
-        addCardComments={addComments}
-        deleteCardComments={deleteComments}
+        cardId={cardId}
       />
-      <DefaultButton buttonOnClick={deleteCard} buttonValue="Удалить"/>
+      <DefaultButton buttonOnClick={toggleDeleteCard} buttonValue="Удалить"/>
     </OpenCard>
   </DefaultModal>
 

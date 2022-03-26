@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 
 import DefaultModal from '../../ui/DefaultModal';
@@ -6,53 +6,17 @@ import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
 import {Local} from '../../services/LocalStorage'
+import {UserNameContext} from '../../contexts/UserNameContext'
+import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 const Board: React.FC = () => {
 
-  useEffect(() => {
-    (Local.getColumns()===null)
-      && Local.setColumns(JSON.stringify([
-         {
-           columnId: 0,
-           columnTitle:"ToDo"
-         },
-         {
-           columnId: 1,
-           columnTitle:"InProgress"
-         },
-         {
-           columnId: 2,
-           columnTitle:"Testing"
-         },
-         {
-           columnId: 3,
-           columnTitle:"Done"
-         },
-       ]))
-  },[]);
-
-  const [columns, setColumns] = useState(JSON.parse(Local.getColumns()))
-
-  const editColumns = (id: number, title: string) => {
-    columns[id].columnTitle=title;
-    setColumns(columns);
-    Local.setColumns(JSON.stringify(columns));
-  }
-
-  const [userName, setUserName] = useState("")
-  const addUserName = (name: string) => {
-    setUserName(name);
-  }
-
-  const [isAddUserName, setAddUserName] = useState(!(Local.getColumns()===null))
-  const toggleAddUserName = () => {
-    (userName!=="") && setAddUserName(true);
-    Local.setUserName(userName);
-  }
+  const {isAddUserName} = useContext(UserNameContext);
+  const {columns} = useContext(ColumnsContext);
 
   const userNamePopUp = (!isAddUserName) &&
     <DefaultModal>
-      <UserName userName={userName} addUserName={addUserName} toggleAddUserName={toggleAddUserName}/>
+      <UserName/>
     </DefaultModal>
 
   const columnList = columns.map((column:{
@@ -62,8 +26,7 @@ const Board: React.FC = () => {
     <Column
       key={column.columnId}
       columnId={column.columnId}
-      columnTitle={column.columnTitle}
-      editColumns={editColumns}>
+      columnTitle={column.columnTitle}>
       <CardsList cardListId={column.columnId}/>
     </Column>)
 

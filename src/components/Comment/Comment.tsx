@@ -1,24 +1,28 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
+import {CommentsContext} from '../../contexts/CommentsContext'
 
 interface CommentProps{
   cardId: number,
   cardCommentId: number,
   cardCommentAuthor: string,
   cardCommentText: string
-  deleteCardComments: (commentId: number) => void;
 }
 
-const Comment: React.FC<CommentProps> = (props) => {
+const Comment: React.FC<CommentProps> = ({cardId,cardCommentId,cardCommentAuthor,cardCommentText}) => {
+
+  const {
+    deleteComments
+  } = useContext(CommentsContext);
 
   const deleteCardComments = () =>{
-    props.deleteCardComments(props.cardCommentId)
+    deleteComments(cardId, cardCommentId)
   }
 
   return(
     <CommentStyle>
-      <CommentAuthor>{props.cardCommentAuthor}:</CommentAuthor>
-      <CommentText>{props.cardCommentText}</CommentText>
+      <CommentAuthor>{cardCommentAuthor}:</CommentAuthor>
+      <CommentText>{cardCommentText}</CommentText>
       <CommentButton onClick={deleteCardComments}>Удалить</CommentButton>
     </CommentStyle>
   )

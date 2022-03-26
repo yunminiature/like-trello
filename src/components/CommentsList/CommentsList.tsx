@@ -1,17 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import styled from 'styled-components';
+import {CommentsContext} from '../../contexts/CommentsContext'
 
 import Comment from '../Comment';
 import DefaultButton from '../../ui/DefaultButton';
 
 interface CommentListProps{
   cardId: number;
-  cardComments: {cardId: number, cardCommentId: number, cardCommentAuthor: string, cardCommentText: string}[];
-  addCardComments: (commentText: string) => void;
-  deleteCardComments: (commentId: number) => void;
 }
 
-const CommentsList: React.FC<CommentListProps> = (props) => {
+const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
+
+  const {
+    comments,
+    addComments
+  } = useContext(CommentsContext);
 
   const [commentText, setCommentText] = useState("")
   const addCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,16 +22,15 @@ const CommentsList: React.FC<CommentListProps> = (props) => {
   }
 
   const toggleIsAdd = () => {
-    props.addCardComments(commentText);
+    addComments(cardId, commentText);
     setCommentText("");
   }
 
-  const commentsList = props.cardComments.map(comment =>
-    (props.cardId===comment.cardId) &&
+  const commentsList = comments.map(comment =>
+    (cardId===comment.cardId) &&
       <Comment
         key={comment.cardCommentId}
         {...comment}
-        deleteCardComments={props.deleteCardComments}
       />
   )
 

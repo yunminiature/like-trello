@@ -1,16 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import styled from 'styled-components';
 
 import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
+import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 interface ColumnProps{
   columnId: number;
   columnTitle: string;
-  editColumns: (id: number, title: string) => void;
 }
 
 const Column: React.FC<ColumnProps> = (props) => {
+
+  const {editColumns} = useContext(ColumnsContext);
 
   const [columnTitle, setColumnTitle] = useState(props.columnTitle)
   const editColumnTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +21,7 @@ const Column: React.FC<ColumnProps> = (props) => {
 
   const [isEdit, setIsEdit] = useState(false)
   const toggleIsEdit = () => {
-    (isEdit) && props.editColumns(props.columnId, columnTitle)
+    (isEdit) && editColumns(props.columnId, columnTitle)
     setIsEdit(!isEdit);
   }
 

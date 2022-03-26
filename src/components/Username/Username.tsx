@@ -1,23 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
 
-interface UserNameProps{
-  userName: string;
-  addUserName: (name:string) => void;
-  toggleAddUserName: () => void;
-}
+import {UserNameContext} from '../../contexts/UserNameContext'
 
-const UserName: React.FC<UserNameProps> = (props) => {
+const UserName: React.FC = () => {
 
-  const userNameToBoard = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.addUserName(e.target.value);
-  }
+  const {userName, addUserName, toggleAddUserName} = useContext(UserNameContext);
 
   return(
     <UserNamePopUp>
       <UserNameText>Как тебя зовут?</UserNameText>
-      <UserNameInput type="text" value={props.userName} onChange={userNameToBoard}/>
-      <UserNameButton onClick={props.toggleAddUserName}>Принять</UserNameButton>
+      <UserNameInput type="text" value={userName} onChange={addUserName}/>
+      <UserNameButton onClick={toggleAddUserName}>Принять</UserNameButton>
     </UserNamePopUp>
   )
 }
