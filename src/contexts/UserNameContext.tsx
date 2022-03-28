@@ -4,28 +4,21 @@ import {Local} from '../services/LocalStorage'
 
 export const UserNameContext = createContext<{
   userName: string,
-  addUserName?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  isAddUserName: boolean,
-  toggleAddUserName?: () => void,
-}>({userName: "", isAddUserName: false});
+  addUserName?: (userName: string) => void,
+}>({userName:""});
 
 export const UserNameContextProvider: React.FC = ({children}) => {
-  const [userName, setUserName] = useState("");
-  const addUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value)
-  };
 
-  const [isAddUserName, setAddUserName] = useState(!(Local.getUserName()===null))
-  const toggleAddUserName = () => {
-    (userName!=="") && setAddUserName(true);
+  const [userName, setUserName] = useState(Local.getUserName())
+  const addUserName = (userName: string) => {
+    setUserName(userName);
     Local.setUserName(userName);
   }
 
   return(
     <UserNameContext.Provider value={{
-      userName,addUserName,
-      isAddUserName,
-      toggleAddUserName
+      userName,
+      addUserName
     }}>
       {children}
     </UserNameContext.Provider>

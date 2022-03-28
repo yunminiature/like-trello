@@ -6,15 +6,13 @@ import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
 import {Local} from '../../services/LocalStorage'
-import {UserNameContext} from '../../contexts/UserNameContext'
 import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 const Board: React.FC = () => {
 
-  const {isAddUserName} = useContext(UserNameContext);
   const {columns} = useContext(ColumnsContext);
 
-  const userNamePopUp = (!isAddUserName) &&
+  const userNamePopUp = (Local.getUserName()===null) &&
     <DefaultModal>
       <UserName/>
     </DefaultModal>

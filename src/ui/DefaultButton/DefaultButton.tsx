@@ -2,14 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface DefaultButtonProps{
-  buttonOnClick: () => void;
-  buttonValue: string;
+  buttonType: "button" | "submit" | "reset" | undefined;
+  buttonOnClick?: () => void;
+  buttonValue?: string;
 }
 
-const DefaultButton: React.FC<DefaultButtonProps> = ({buttonOnClick, buttonValue}) => {
+const DefaultButton: React.FC<DefaultButtonProps> = ({buttonType, buttonOnClick, buttonValue}) => {
 
   return(
-    <Button onClick={buttonOnClick}>{buttonValue}</Button>
+    <Button type={buttonType} onClick={buttonOnClick}>{buttonValue}</Button>
   )
 }
 

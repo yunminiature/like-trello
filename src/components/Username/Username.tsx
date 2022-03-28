@@ -1,17 +1,33 @@
 import React, {useContext} from 'react';
+import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
 
 import {UserNameContext} from '../../contexts/UserNameContext'
+import DefaultButton from '../../ui/DefaultButton';
+import DefaultInput from '../../ui/DefaultInput';
+
+interface InputsUserName{
+  userName: string;
+}
 
 const UserName: React.FC = () => {
 
-  const {userName, addUserName, toggleAddUserName} = useContext(UserNameContext);
+  const {addUserName} = useContext(UserNameContext);
+
+  const {register, handleSubmit, watch, formState: {errors}} = useForm<InputsUserName>()
+  const onSubmit: SubmitHandler<InputsUserName> = data =>{
+    addUserName?.(data.userName)
+  }
 
   return(
     <UserNamePopUp>
-      <UserNameText>Как тебя зовут?</UserNameText>
-      <UserNameInput type="text" value={userName} onChange={addUserName}/>
-      <UserNameButton onClick={toggleAddUserName}>Принять</UserNameButton>
+      <form>
+        <label>
+          Как тебя зовут?
+          <DefaultInput {...register("userName")} inputType="text"/>
+        </label>
+        <DefaultButton buttonType="submit">Принять</DefaultButton>
+      </form>
     </UserNamePopUp>
   )
 }

@@ -50,7 +50,7 @@ export const CommentsContextProvider: React.FC = ({children}) => {
         cardCommentText: commentText
       }]
     );
-    addCommentsValue(cardId);
+    addCommentsValue?.(cardId);
     Local.setComments(JSON.stringify([...comments, {
       cardId: cardId,
       cardCommentId: comments[comments.length - 1].cardCommentId+1,
@@ -59,9 +59,19 @@ export const CommentsContextProvider: React.FC = ({children}) => {
     }]))
   }
   const deleteComments = (cardId:number, commentId: number) => {
-    setComments([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]);
-    deleteCommentsValue(cardId)
-    Local.setComments(JSON.stringify([...comments.slice(0, commentId), ...comments.slice(commentId + 1)]))
+    setComments([...comments.filter((item:{
+      cardId: number,
+      cardCommentId: number,
+      cardCommentAuthor: string,
+      cardCommentText: string,
+    }) => item.cardCommentId !== commentId)])
+    deleteCommentsValue?.(cardId);
+    Local.setComments(JSON.stringify([...comments.filter((item:{
+      cardId: number,
+      cardCommentId: number,
+      cardCommentAuthor: string,
+      cardCommentText: string,
+    }) => item.cardCommentId !== commentId)]))
   }
 
   return(

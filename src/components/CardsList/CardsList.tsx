@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
+import {useForm, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
 import {CardsContext} from '../../contexts/CardsContext'
 
@@ -11,6 +12,11 @@ interface CardListProps{
   cardListId: number;
 }
 
+interface InputsCard{
+  cardTitle: string;
+  cardDescription: string;
+}
+
 const CardList: React.FC<CardListProps> = ({cardListId}) => {
 
   const {
@@ -18,25 +24,14 @@ const CardList: React.FC<CardListProps> = ({cardListId}) => {
     addCard
   } = useContext(CardsContext);
 
-  const addingCard = () =>{
-    addCard(cardListId, cardTitle, cardDescription);
-    setCardTitle("");
-    setCardDescription("");
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsCard>()
+  const onSubmit: SubmitHandler<InputsCard> = data =>{
+    addCard?.(cardListId, data.cardTitle, data.cardDescription);
   }
 
   const [isAdd, setIsAdd] = useState(false)
   const toggleIsAdd = () => {
     setIsAdd(!isAdd);
-  }
-
-  const [cardTitle, setCardTitle] = useState("")
-  const addCardTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardTitle(e.target.value);
-  }
-
-  const [cardDescription, setCardDescription] = useState("")
-  const addCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardDescription(e.target.value);
   }
 
   const cardsList = cards.map((card:{
@@ -56,24 +51,24 @@ const CardList: React.FC<CardListProps> = ({cardListId}) => {
 
   const newCard = (isAdd) &&
     <NewCard>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Название:
-          <DefaultInput inputType="text" inputValue={cardTitle} inputOnChange={addCardTitle}/>
+          <DefaultInput {...register("cardTitle")} inputType="text"/>
         </label>
         <label>
           Описание:
-          <DefaultInput inputType="text" inputValue={cardDescription} inputOnChange={addCardDescription}/>
+          <DefaultInput {...register("cardDescription")} inputType="text"/>
         </label>
+        <DefaultButton buttonType="submit" buttonValue="Сохранить карточку"/>
       </form>
-      <DefaultButton buttonOnClick={addingCard} buttonValue="Сохранить карточку"/>
     </NewCard>
 
   return(
     <Cards>
       {cardsList}
       {newCard}
-      <DefaultButton buttonOnClick={toggleIsAdd} buttonValue={isAdd ? "Отменить" : "Создать карточку"}/>
+      <DefaultButton buttonType="button" buttonOnClick={toggleIsAdd} buttonValue={isAdd ? "Отменить" : "Создать карточку"}/>
     </Cards>
   )
 }

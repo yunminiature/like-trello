@@ -16,7 +16,7 @@ const Comment: React.FC<CommentProps> = ({cardId,cardCommentId,cardCommentAuthor
   } = useContext(CommentsContext);
 
   const deleteCardComments = () =>{
-    deleteComments(cardId, cardCommentId)
+    deleteComments?.(cardId, cardCommentId)
   }
 
   return(

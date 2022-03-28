@@ -1,42 +1,51 @@
 import React, {useState, useContext} from 'react';
 import styled from 'styled-components';
+import {useForm, SubmitHandler} from 'react-hook-form';
+import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
-import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 interface ColumnProps{
   columnId: number;
   columnTitle: string;
 }
 
-const Column: React.FC<ColumnProps> = (props) => {
+interface InputsColumns{
+  columnTitle: string;
+}
+
+const Column: React.FC<ColumnProps> = ({columnId,columnTitle, children}) => {
 
   const {editColumns} = useContext(ColumnsContext);
 
-  const [columnTitle, setColumnTitle] = useState(props.columnTitle)
-  const editColumnTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setColumnTitle(e.target.value);
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsColumns>()
+  const onSubmit: SubmitHandler<InputsColumns> = data =>{
+    editColumns?.(columnId, data.columnTitle);
+    setIsEdit(!isEdit)
   }
 
   const [isEdit, setIsEdit] = useState(false)
   const toggleIsEdit = () => {
-    (isEdit) && editColumns(props.columnId, columnTitle)
     setIsEdit(!isEdit);
   }
 
-  const title =
-    <ColumnTitle>
-      {(isEdit)
-      ? <DefaultInput inputType="text" inputValue={columnTitle} inputOnChange={editColumnTitle}/>
-      : <h2>{columnTitle}</h2>}
-      <DefaultButton buttonOnClick={toggleIsEdit} buttonValue={isEdit ? "Сохранить" : "Изменить"}/>
+  const title = (isEdit)
+  ? <ColumnTitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultInput {...register("columnTitle")} inputType="text" inputDefaultValue={columnTitle}/>
+        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
+      </form>
+    </ColumnTitle>
+  : <ColumnTitle>
+      <h2>{columnTitle}</h2>
+      <DefaultButton buttonType="button" buttonOnClick={toggleIsEdit} buttonValue="Изменить"></DefaultButton>
     </ColumnTitle>
 
   return (
     <ColumnElement>
       {title}
-      {props.children}
+      {children}
     </ColumnElement>
   )
 }

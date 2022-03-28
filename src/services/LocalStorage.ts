@@ -1,7 +1,7 @@
 class LocalStorage {
 
   getUserName(){
-    return localStorage.getItem("userName")
+    return localStorage.getItem("userName") || ''
   }
 
   setUserName(item:string){

@@ -3,14 +3,14 @@ import styled from 'styled-components';
 
 interface DefaultInputProps{
   inputType: string;
-  inputValue: string;
-  inputOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputDefaultValue?: string;
+  inputOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const DefaultInput: React.FC<DefaultInputProps> = ({inputType, inputValue, inputOnChange}) => {
+const DefaultInput: React.FC<DefaultInputProps> = ({inputType, inputDefaultValue, inputOnChange}) => {
 
   return(
-    <Input type={inputType} value={inputValue} onChange={inputOnChange}/>
+    <Input type={inputType} defaultValue={inputDefaultValue} onChange={inputOnChange}/>
   )
 }
 

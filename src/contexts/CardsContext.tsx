@@ -86,13 +86,31 @@ export const CardsContextProvider: React.FC = ({children}) => {
   }
 
   const editTitle = (id: number, title: string) => {
-    cards[id].cardTitle=title;
+    cards.forEach((item:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor: string,
+      cardCommentsValue: number,
+    }) => {
+      if (id===item.cardId) item.cardTitle=title
+    })
     setCard(cards);
     Local.setCards(JSON.stringify(cards));
   }
 
   const editDescription = (id: number, description: string) => {
-    cards[id].cardDescription=description;
+    cards.forEach((item:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor: string,
+      cardCommentsValue: number,
+    }) => {
+      if (id===item.cardId) item.cardDescription=description
+    })
     setCard(cards);
     Local.setCards(JSON.stringify(cards));
   }

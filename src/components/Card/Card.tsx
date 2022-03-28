@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
+import {useForm, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
 import {CardsContext} from '../../contexts/CardsContext'
 
@@ -18,6 +19,11 @@ interface CardProps{
   cardCommentsValue: number;
 }
 
+interface InputsCard{
+  cardTitle: string;
+  cardDescription: string;
+}
+
 const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
 
   const {
@@ -27,6 +33,18 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
     addCommentsValue,
     deleteCommentsValue,
   } = useContext(CardsContext);
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsCard>()
+  const onSubmit: SubmitHandler<InputsCard> = data =>{
+    if (isEditTitle) {
+      editTitle?.(cardId, data.cardTitle);
+      setIsEditTitle(!isEditTitle)
+    }
+    if (isEditDescription) {
+      editDescription?.(cardId, data.cardDescription);
+      setIsEditDescription(!isEditDescription);
+    }
+  }
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleIsOpen = () => {
@@ -42,64 +60,62 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
   });
 
   const toggleDeleteCard = () =>{
-    deleteCard(cardId)
+    deleteCard?.(cardId)
   }
 
-  const [editCardTitle, setEditCardTitle] = useState(cardTitle)
-  const toggleEditCardTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditCardTitle(e.target.value);
-  }
   const [isEditTitle, setIsEditTitle] = useState(false)
   const toggleIsEditTitle = () => {
-    (isEditTitle) && editTitle(cardId, editCardTitle)
     setIsEditTitle(!isEditTitle);
   }
 
-  const [editCardDescription, setEditCardDescription] = useState(cardDescription)
-  const toggleEditCardDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditCardDescription(e.target.value);
-  }
   const [isEditDescription, setIsEditDescription] = useState(false)
   const toggleIsEditDescription = () => {
-    (isEditDescription) && editDescription(cardId, editCardDescription)
     setIsEditDescription(!isEditDescription);
   }
 
   const title = (isEditTitle)
     ?<DefaultSection>
-      <h3>Название: </h3>
-      <DefaultInput inputType="text" inputValue={editCardTitle} inputOnChange={toggleEditCardTitle}/>
-      <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label>
+          <h3>Название: </h3>
+          <DefaultInput {...register("cardTitle")} inputType="text" inputDefaultValue={cardTitle}/>
+        </label>
+        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
+      </form>
      </DefaultSection>
     :<DefaultSection>
       <h3>Название: </h3>
-      <p>{editCardTitle}</p>
-      <DefaultButton buttonOnClick={toggleIsEditTitle} buttonValue={isEditTitle ? "Сохранить" : "Изменить"}/>
+      <p>{cardTitle}</p>
+      <DefaultButton buttonType="button" buttonOnClick={toggleIsEditTitle} buttonValue="Изменить"/>
      </DefaultSection>;
 
   const description = (isEditDescription)
     ?<DefaultSection>
-      <h3>Описание: </h3>
-      <DefaultInput inputType="text" inputValue={editCardDescription} inputOnChange={toggleEditCardDescription}/>
-      <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label>
+          <h3>Описание: </h3>
+          <DefaultInput {...register("cardDescription")} inputType="text" inputDefaultValue={cardDescription}/>
+        </label>
+        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
+      </form>
      </DefaultSection>
     :<DefaultSection>
       <h3>Описание: </h3>
-      <p>{editCardDescription}</p>
-      <DefaultButton buttonOnClick={toggleIsEditDescription} buttonValue={isEditDescription ? "Сохранить" : "Изменить"}/>
+      <p>{cardDescription}</p>
+      <DefaultButton buttonType="button" buttonOnClick={toggleIsEditDescription} buttonValue="Изменить"/>
      </DefaultSection>;
 
   const card =
     <CardStyle onClick={toggleIsOpen}>
-      <CardTitle>{editCardTitle}</CardTitle>
-      <CardDescription>{editCardDescription}</CardDescription>
+      <CardTitle>{cardTitle}</CardTitle>
+      <CardDescription>{cardDescription}</CardDescription>
       <CardComments>Комментарии: {cardCommentsValue}</CardComments>
     </CardStyle>
 
   const openСard = (isOpen) &&
   <DefaultModal>
     <OpenCard>
-      <DefaultButton buttonOnClick={toggleIsClose} buttonValue="Закрыть"/>
+      <DefaultButton buttonType="button" buttonOnClick={toggleIsClose} buttonValue="Закрыть"/>
       {title}
       {description}
       <DefaultSection>
@@ -109,7 +125,7 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
       <CommentsList
         cardId={cardId}
       />
-      <DefaultButton buttonOnClick={toggleDeleteCard} buttonValue="Удалить"/>
+      <DefaultButton buttonType="button" buttonOnClick={toggleDeleteCard} buttonValue="Удалить"/>
     </OpenCard>
   </DefaultModal>
 

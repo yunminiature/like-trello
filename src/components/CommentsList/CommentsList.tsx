@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react';
 import styled from 'styled-components';
+import {useForm, SubmitHandler} from 'react-hook-form';
 import {CommentsContext} from '../../contexts/CommentsContext'
 
 import Comment from '../Comment';
@@ -9,6 +10,10 @@ interface CommentListProps{
   cardId: number;
 }
 
+interface InputsComment{
+  commentText: string;
+}
+
 const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
 
   const {
@@ -16,14 +21,9 @@ const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
     addComments
   } = useContext(CommentsContext);
 
-  const [commentText, setCommentText] = useState("")
-  const addCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentText(e.target.value);
-  }
-
-  const toggleIsAdd = () => {
-    addComments(cardId, commentText);
-    setCommentText("");
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsComment>()
+  const onSubmit: SubmitHandler<InputsComment> = data =>{
+    addComments?.(cardId, data.commentText);
   }
 
   const commentsList = comments.map(comment =>
@@ -38,8 +38,10 @@ const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
     <Comments>
       {commentsList}
       <AddingComment>
-        <CommentInput type="text" value={commentText} onChange={addCommentText}/>
-        <DefaultButton buttonOnClick={toggleIsAdd} buttonValue="Добавить"/>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input {...register("commentText")} type="text"/>
+          <button type="submit">Добавить</button>
+        </form>
       </AddingComment>
     </Comments>
   )
