@@ -1,9 +1,10 @@
-import React, {useState, useContext} from 'react';
+import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
-import {useForm, SubmitHandler} from 'react-hook-form';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {CommentsContext} from '../../contexts/CommentsContext'
 
 import Comment from '../Comment';
+import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
 
 interface CommentListProps{
@@ -14,14 +15,14 @@ interface InputsComment{
   commentText: string;
 }
 
-const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
+const CommentsList:FC<CommentListProps> = ({cardId}) => {
 
   const {
     comments,
     addComments
   } = useContext(CommentsContext);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsComment>()
+  const {handleSubmit, control} = useForm<InputsComment>()
   const onSubmit: SubmitHandler<InputsComment> = data =>{
     addComments?.(cardId, data.commentText);
   }
@@ -29,7 +30,7 @@ const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
   const commentsList = comments.map(comment =>
     (cardId===comment.cardId) &&
       <Comment
-        key={comment.cardCommentId}
+        key={comment.id}
         {...comment}
       />
   )
@@ -39,8 +40,20 @@ const CommentsList: React.FC<CommentListProps> = ({cardId}) => {
       {commentsList}
       <AddingComment>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register("commentText")} type="text"/>
-          <button type="submit">Добавить</button>
+          <Controller
+            control={control}
+            name="commentText"
+            render={({field:{onChange}}) => (
+              <DefaultInput
+                type="text"
+                defaultValue=""
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange(e.target.value);
+                }}
+              />
+            )}
+          />
+          <DefaultButton type="submit" value="Добавить"/>
         </form>
       </AddingComment>
     </Comments>

@@ -1,6 +1,6 @@
-import React, {useState, useContext} from 'react';
+import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
-import {useForm, SubmitHandler} from 'react-hook-form';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {ColumnsContext} from '../../contexts/ColumnsContext'
 
 import DefaultInput from '../../ui/DefaultInput';
@@ -15,14 +15,13 @@ interface InputsColumns{
   columnTitle: string;
 }
 
-const Column: React.FC<ColumnProps> = ({columnId,columnTitle, children}) => {
+const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
 
   const {editColumns} = useContext(ColumnsContext);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsColumns>()
+  const {handleSubmit, control} = useForm<InputsColumns>()
   const onSubmit: SubmitHandler<InputsColumns> = data =>{
-    editColumns?.(columnId, data.columnTitle);
-    setIsEdit(!isEdit)
+    editColumns?.(columnId, data.columnTitle)
   }
 
   const [isEdit, setIsEdit] = useState(false)
@@ -31,20 +30,35 @@ const Column: React.FC<ColumnProps> = ({columnId,columnTitle, children}) => {
   }
 
   const title = (isEdit)
-  ? <ColumnTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DefaultInput {...register("columnTitle")} inputType="text" inputDefaultValue={columnTitle}/>
-        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
-      </form>
-    </ColumnTitle>
-  : <ColumnTitle>
+  ? <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        control={control}
+        name="columnTitle"
+        rules={{
+          required:"Обязательное поле"
+        }}
+        render={({field:{onChange}}) => (
+          <DefaultInput
+            type="text"
+            defaultValue={columnTitle}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange(e.target.value);
+            }}
+          />
+        )}
+      />
+      <DefaultButton type="submit" onClick={toggleIsEdit} value="Сохранить"/>
+    </form>
+  : <>
       <h2>{columnTitle}</h2>
-      <DefaultButton buttonType="button" buttonOnClick={toggleIsEdit} buttonValue="Изменить"></DefaultButton>
-    </ColumnTitle>
+      <DefaultButton type="button" onClick={toggleIsEdit} value="Изменить"/>
+    </>
 
   return (
     <ColumnElement>
-      {title}
+      <ColumnTitle>
+        {title}
+      </ColumnTitle>
       {children}
     </ColumnElement>
   )

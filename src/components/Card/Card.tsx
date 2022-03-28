@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {FC, useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
-import {useForm, SubmitHandler} from 'react-hook-form';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
 import {CardsContext} from '../../contexts/CardsContext'
 
@@ -24,7 +24,7 @@ interface InputsCard{
   cardDescription: string;
 }
 
-const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
+const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
 
   const {
     deleteCard,
@@ -34,16 +34,10 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
     deleteCommentsValue,
   } = useContext(CardsContext);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<InputsCard>()
+  const {handleSubmit, control} = useForm<InputsCard>()
   const onSubmit: SubmitHandler<InputsCard> = data =>{
-    if (isEditTitle) {
-      editTitle?.(cardId, data.cardTitle);
-      setIsEditTitle(!isEditTitle)
-    }
-    if (isEditDescription) {
-      editDescription?.(cardId, data.cardDescription);
-      setIsEditDescription(!isEditDescription);
-    }
+    editTitle?.(cardId, data.cardTitle);
+    editDescription?.(cardId, data.cardDescription);
   }
 
   const [isOpen, setIsOpen] = useState(false)
@@ -76,33 +70,56 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
   const title = (isEditTitle)
     ?<DefaultSection>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          <h3>Название: </h3>
-          <DefaultInput {...register("cardTitle")} inputType="text" inputDefaultValue={cardTitle}/>
-        </label>
-        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
+        <Controller
+          control={control}
+          name="сardTitle"
+          rules={{
+            required:"Обязательное поле"
+          }}
+          render={({field:{onChange}}) => (
+            <DefaultInput
+              label="Название: "
+              type="text"
+              defaultValue={cardTitle}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(e.target.value);
+              }}
+            />
+          )}
+        />
+        <DefaultButton type="submit" value="Сохранить"/>
       </form>
      </DefaultSection>
     :<DefaultSection>
       <h3>Название: </h3>
       <p>{cardTitle}</p>
-      <DefaultButton buttonType="button" buttonOnClick={toggleIsEditTitle} buttonValue="Изменить"/>
+      <DefaultButton type="button" onClick={toggleIsEditTitle} value="Изменить"/>
      </DefaultSection>;
 
   const description = (isEditDescription)
     ?<DefaultSection>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          <h3>Описание: </h3>
-          <DefaultInput {...register("cardDescription")} inputType="text" inputDefaultValue={cardDescription}/>
-        </label>
-        <DefaultButton buttonType="submit" buttonValue="Сохранить"/>
+        <Controller
+          control={control}
+          name="сardDescription"
+          render={({field:{onChange}}) => (
+            <DefaultInput
+              label="Описание: "
+              type="text"
+              defaultValue={сardDescription}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(e.target.value);
+              }}
+            />
+          )}
+        />
+        <DefaultButton type="submit" value="Сохранить"/>
       </form>
      </DefaultSection>
     :<DefaultSection>
       <h3>Описание: </h3>
       <p>{cardDescription}</p>
-      <DefaultButton buttonType="button" buttonOnClick={toggleIsEditDescription} buttonValue="Изменить"/>
+      <DefaultButton type="button" onClick={toggleIsEditDescription} value="Изменить"/>
      </DefaultSection>;
 
   const card =
@@ -115,7 +132,7 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
   const openСard = (isOpen) &&
   <DefaultModal>
     <OpenCard>
-      <DefaultButton buttonType="button" buttonOnClick={toggleIsClose} buttonValue="Закрыть"/>
+      <DefaultButton type="button" onClick={toggleIsClose} value="Закрыть"/>
       {title}
       {description}
       <DefaultSection>
@@ -125,7 +142,7 @@ const Card: React.FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuth
       <CommentsList
         cardId={cardId}
       />
-      <DefaultButton buttonType="button" buttonOnClick={toggleDeleteCard} buttonValue="Удалить"/>
+      <DefaultButton type="button" onClick={toggleDeleteCard} value="Удалить"/>
     </OpenCard>
   </DefaultModal>
 

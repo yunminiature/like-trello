@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {FC, useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 
 import DefaultModal from '../../ui/DefaultModal';
@@ -8,7 +8,7 @@ import UserName from '../UserName';
 import {Local} from '../../services/LocalStorage'
 import {ColumnsContext} from '../../contexts/ColumnsContext'
 
-const Board: React.FC = () => {
+const Board:FC = () => {
 
   const {columns} = useContext(ColumnsContext);
 

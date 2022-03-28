@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {FC, useContext} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ interface InputsUserName{
   userName: string;
 }
 
-const UserName: React.FC = () => {
+const UserName:FC = () => {
 
   const {addUserName} = useContext(UserNameContext);
 
@@ -24,9 +24,9 @@ const UserName: React.FC = () => {
       <form>
         <label>
           Как тебя зовут?
-          <DefaultInput {...register("userName")} inputType="text"/>
+          <DefaultInput {...register("userName")} type="text"/>
         </label>
-        <DefaultButton buttonType="submit">Принять</DefaultButton>
+        <DefaultButton type="submit" value="Принять"/>
       </form>
     </UserNamePopUp>
   )

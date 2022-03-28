@@ -32,6 +32,7 @@ export const ColumnsContextProvider: React.FC = ({children}) => {
 
   const [columns, setColumns] = useState(JSON.parse(Local.getColumns()))
   const editColumns = (id: number, title: string) => {
+    console.log(columns)
     columns[id].columnTitle=title;
     setColumns(columns);
     Local.setColumns(JSON.stringify(columns));

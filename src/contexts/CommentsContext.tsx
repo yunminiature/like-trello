@@ -6,7 +6,7 @@ import {Local} from '../services/LocalStorage'
 export const CommentsContext = createContext<{
   comments: {
     cardId: number,
-    cardCommentId: number,
+    id: number,
     cardCommentAuthor: string,
     cardCommentText: string,
   }[],
@@ -14,19 +14,19 @@ export const CommentsContext = createContext<{
   deleteComments?: (cardId:number, commentId: number) => void
 }>({comments: [{
       cardId: 0,
-      cardCommentId: 0,
+      id: 0,
       cardCommentAuthor: 'noname',
       cardCommentText: 'Сколько стоит слон?',
     },
     {
       cardId: 0,
-      cardCommentId: 1,
+      id: 1,
       cardCommentAuthor: 'noname',
       cardCommentText: 'Много.',
     },
     {
       cardId: 1,
-      cardCommentId: 2,
+      id: 2,
       cardCommentAuthor: 'noname',
       cardCommentText: 'Выбрал индийского',
     }]
@@ -45,7 +45,7 @@ export const CommentsContextProvider: React.FC = ({children}) => {
     setComments(
       [...comments, {
         cardId: cardId,
-        cardCommentId: comments[comments.length - 1].cardCommentId+1,
+        id: comments[comments.length - 1].id+1,
         cardCommentAuthor: Local.getUserName(),
         cardCommentText: commentText
       }]
@@ -53,7 +53,7 @@ export const CommentsContextProvider: React.FC = ({children}) => {
     addCommentsValue?.(cardId);
     Local.setComments(JSON.stringify([...comments, {
       cardId: cardId,
-      cardCommentId: comments[comments.length - 1].cardCommentId+1,
+      id: comments[comments.length - 1].id+1,
       cardCommentAuthor: Local.getUserName(),
       cardCommentText: commentText
     }]))
@@ -61,17 +61,17 @@ export const CommentsContextProvider: React.FC = ({children}) => {
   const deleteComments = (cardId:number, commentId: number) => {
     setComments([...comments.filter((item:{
       cardId: number,
-      cardCommentId: number,
+      id: number,
       cardCommentAuthor: string,
       cardCommentText: string,
-    }) => item.cardCommentId !== commentId)])
+    }) => item.id !== commentId)])
     deleteCommentsValue?.(cardId);
     Local.setComments(JSON.stringify([...comments.filter((item:{
       cardId: number,
-      cardCommentId: number,
+      id: number,
       cardCommentAuthor: string,
       cardCommentText: string,
-    }) => item.cardCommentId !== commentId)]))
+    }) => item.id !== commentId)]))
   }
 
   return(

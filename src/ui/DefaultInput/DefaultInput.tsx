@@ -2,17 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface DefaultInputProps{
-  inputType: string;
-  inputDefaultValue?: string;
-  inputOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  label?: string;
+  type: string;
+  defaultValue?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const DefaultInput: React.FC<DefaultInputProps> = ({inputType, inputDefaultValue, inputOnChange}) => {
+const DefaultInput: React.FC<DefaultInputProps> = ({label, type, defaultValue, onChange}) => {
 
   return(
-    <Input type={inputType} defaultValue={inputDefaultValue} onChange={inputOnChange}/>
+    <Label>
+      <h3>{label}</h3>
+      <Input type={type} defaultValue={defaultValue} onChange={onChange}/>
+    </Label>
   )
 }
+
+const Label = styled.label`
+
+`
 
 const Input = styled.input`
   width: 100%;
