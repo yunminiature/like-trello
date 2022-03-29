@@ -37,10 +37,11 @@ const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
         rules={{
           required:"Обязательное поле"
         }}
-        render={({field:{onChange}}) => (
+        render={({field:{onChange, value}}) => (
           <DefaultInput
             type="text"
             defaultValue={columnTitle}
+            value={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onChange(e.target.value);
             }}

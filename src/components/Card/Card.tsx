@@ -19,9 +19,9 @@ interface CardProps{
   cardCommentsValue: number;
 }
 
-interface InputsCard{
-  cardTitle: string;
-  cardDescription: string;
+interface InputCard{
+  inputTitle: string;
+  inputDescription: string;
 }
 
 const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
@@ -34,10 +34,22 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
     deleteCommentsValue,
   } = useContext(CardsContext);
 
-  const {handleSubmit, control} = useForm<InputsCard>()
-  const onSubmit: SubmitHandler<InputsCard> = data =>{
-    editTitle?.(cardId, data.cardTitle);
-    editDescription?.(cardId, data.cardDescription);
+  const {
+    control: controlTitle,
+    handleSubmit: handleSubmitTitle,
+  } = useForm<InputCard>()
+  const onSubmitTitle: SubmitHandler<InputCard> = data =>{
+    editTitle?.(cardId, data.inputTitle);
+    setIsEditTitle(!isEditTitle);
+  }
+
+  const {
+    control: controlDescription,
+    handleSubmit: handleSubmitDescription,
+  } = useForm<InputCard>()
+  const onSubmitDescription: SubmitHandler<InputCard> = data =>{
+    editDescription?.(cardId, data.inputDescription);
+    setIsEditDescription(!isEditDescription);
   }
 
   const [isOpen, setIsOpen] = useState(false)
@@ -69,17 +81,18 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
 
   const title = (isEditTitle)
     ?<DefaultSection>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitTitle(onSubmitTitle)}>
         <Controller
-          control={control}
-          name="сardTitle"
+          control={controlTitle}
+          name="inputTitle"
           rules={{
             required:"Обязательное поле"
           }}
-          render={({field:{onChange}}) => (
+          render={({field:{onChange, value}}) => (
             <DefaultInput
               label="Название: "
               type="text"
+              value={value}
               defaultValue={cardTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
@@ -98,14 +111,15 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
 
   const description = (isEditDescription)
     ?<DefaultSection>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitDescription(onSubmitDescription)}>
         <Controller
-          control={control}
-          name="сardDescription"
-          render={({field:{onChange}}) => (
+          control={controlDescription}
+          name="inputDescription"
+          render={({field:{onChange, value}}) => (
             <DefaultInput
               label="Описание: "
               type="text"
+              value={value}
               defaultValue={сardDescription}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);

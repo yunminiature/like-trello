@@ -22,7 +22,7 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
     addComments
   } = useContext(CommentsContext);
 
-  const {handleSubmit, control} = useForm<InputsComment>()
+  const {handleSubmit, control, reset} = useForm<InputsComment>()
   const onSubmit: SubmitHandler<InputsComment> = data =>{
     addComments?.(cardId, data.commentText);
   }
@@ -53,7 +53,7 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
               />
             )}
           />
-          <DefaultButton type="submit" value="Добавить"/>
+          <DefaultButton type="submit" value="Добавить" onClick={reset}/>
         </form>
       </AddingComment>
     </Comments>

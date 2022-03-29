@@ -24,7 +24,7 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
     addCard
   } = useContext(CardsContext);
 
-  const {handleSubmit, control} = useForm<InputsNewCard>()
+  const {handleSubmit, control, reset} = useForm<InputsNewCard>()
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
     addCard?.(cardListId, data.newCardTitle, data.newCardDescription);
   }
@@ -59,10 +59,11 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
           rules={{
             required:"Обязательное поле"
           }}
-          render={({field:{onChange}}) => (
+          render={({field:{onChange, value}}) => (
             <DefaultInput
               label="Название: "
               type="text"
+              value={value}
               defaultValue=""
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
@@ -74,10 +75,11 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
         <Controller
           control={control}
           name="newCardDescription"
-          render={({field:{onChange}}) => (
+          render={({field:{onChange, value}}) => (
             <DefaultInput
               label="Описание: "
               type="text"
+              value={value}
               defaultValue=""
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
@@ -85,7 +87,7 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
             />
           )}
         />
-        <DefaultButton type="submit" value="Сохранить карточку"/>
+        <DefaultButton type="submit" value="Сохранить карточку" onClick={reset}/>
       </form>
     </NewCard>
 
