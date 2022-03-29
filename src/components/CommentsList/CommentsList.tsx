@@ -12,7 +12,7 @@ interface CommentListProps{
 }
 
 interface InputsComment{
-  commentText: string;
+  text: string;
 }
 
 const CommentsList:FC<CommentListProps> = ({cardId}) => {
@@ -22,9 +22,10 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
     addComments
   } = useContext(CommentsContext);
 
-  const {handleSubmit, control, reset} = useForm<InputsComment>()
+  const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
-    addComments?.(cardId, data.commentText);
+    addComments?.(cardId, data.text);
+    reset()
   }
 
   const commentsList = comments.map(comment =>
@@ -42,7 +43,7 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             control={control}
-            name="commentText"
+            name="text"
             render={({field:{onChange}}) => (
               <DefaultInput
                 type="text"
@@ -68,6 +69,14 @@ const Comments = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;
+
+  form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 `
 
 const AddingComment = styled.div`

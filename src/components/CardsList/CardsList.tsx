@@ -24,9 +24,10 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
     addCard
   } = useContext(CardsContext);
 
-  const {handleSubmit, control, reset} = useForm<InputsNewCard>()
+  const {handleSubmit, control, reset} = useForm<InputsNewCard>({defaultValues: {newCardTitle: "" , newCardDescription: ""}})
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
     addCard?.(cardListId, data.newCardTitle, data.newCardDescription);
+    reset()
   }
 
   const [isAdd, setIsAdd] = useState(false)
@@ -87,7 +88,7 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
             />
           )}
         />
-        <DefaultButton type="submit" value="Сохранить карточку" onClick={reset}/>
+        <DefaultButton type="submit" value="Сохранить карточку"/>
       </form>
     </NewCard>
 

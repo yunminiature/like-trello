@@ -86,45 +86,127 @@ export const CardsContextProvider: React.FC = ({children}) => {
   }
 
   const editTitle = (id: number, title: string) => {
-    cards.forEach((item:{
+    setCard(cards.map((card:{
       cardId: number,
       columnId: number,
       cardTitle: string,
       cardDescription: string,
-      cardAuthor: string,
+      cardAuthor:string,
       cardCommentsValue: number,
-    }) => {
-      if (id===item.cardId) item.cardTitle=title
-    })
-    setCard(cards);
-    Local.setCards(JSON.stringify(cards));
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardTitle=title;
+      }
+      return card
+    }));
+    Local.setCards(JSON.stringify(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardTitle=title;
+      }
+      return card
+    })));
   }
 
   const editDescription = (id: number, description: string) => {
-    cards.forEach((item:{
+    setCard(cards.map((card:{
       cardId: number,
       columnId: number,
       cardTitle: string,
       cardDescription: string,
-      cardAuthor: string,
+      cardAuthor:string,
       cardCommentsValue: number,
-    }) => {
-      if (id===item.cardId) item.cardDescription=description
-    })
-    setCard(cards);
-    Local.setCards(JSON.stringify(cards));
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardDescription=description;
+      }
+      return card
+    }));
+    Local.setCards(JSON.stringify(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardDescription=description;
+      }
+      return card
+    })));
   }
 
   const addCommentsValue = (id: number) => {
-    cards[id].cardCommentsValue++;
-    setCard(cards);
-    Local.setCards(JSON.stringify(cards));
+    setCard(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardCommentsValue++;
+      }
+      return card
+    }));
+    Local.setCards(JSON.stringify(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardCommentsValue++;
+      }
+      return card
+    })));
   }
 
   const deleteCommentsValue = (id: number) => {
-    cards[id].cardCommentsValue--;
-    setCard(cards);
-    Local.setCards(JSON.stringify(cards));
+    setCard(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardCommentsValue--;
+      }
+      return card
+    }));
+    Local.setCards(JSON.stringify(cards.map((card:{
+      cardId: number,
+      columnId: number,
+      cardTitle: string,
+      cardDescription: string,
+      cardAuthor:string,
+      cardCommentsValue: number,
+    }) =>
+    {
+      if (card.cardId===id) {
+        card.cardCommentsValue--;
+      }
+      return card
+    })));
   }
 
   return(

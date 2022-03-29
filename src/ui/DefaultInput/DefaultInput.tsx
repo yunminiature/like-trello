@@ -13,7 +13,7 @@ const DefaultInput: React.FC<DefaultInputProps> = ({label, type, value, defaultV
 
   return(
     <Label>
-      <h3>{label}</h3>
+      <LabelText>{label}</LabelText>
       <Input type={type} value={value} defaultValue={defaultValue} onChange={onChange}/>
     </Label>
   )
@@ -34,6 +34,12 @@ const Input = styled.input`
   font-size: 20px;
   line-height: 20px;
   color: #6e60ff;
+`
+
+const LabelText = styled.h3`
+  margin:0;
+  font-size: 18px;
+  line-height: 18px;
 `
 
 export default DefaultInput;

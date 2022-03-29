@@ -120,7 +120,7 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
               label="Описание: "
               type="text"
               value={value}
-              defaultValue={сardDescription}
+              defaultValue={cardDescription}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
               }}

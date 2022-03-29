@@ -17,11 +17,14 @@ interface InputsColumns{
 
 const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
 
+  console.log(columnId,columnTitle);
+
   const {editColumns} = useContext(ColumnsContext);
 
   const {handleSubmit, control} = useForm<InputsColumns>()
   const onSubmit: SubmitHandler<InputsColumns> = data =>{
     editColumns?.(columnId, data.columnTitle)
+    toggleIsEdit()
   }
 
   const [isEdit, setIsEdit] = useState(false)
@@ -48,7 +51,7 @@ const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
           />
         )}
       />
-      <DefaultButton type="submit" onClick={toggleIsEdit} value="Сохранить"/>
+      <DefaultButton type="submit" value="Сохранить"/>
     </form>
   : <>
       <h2>{columnTitle}</h2>
@@ -74,6 +77,13 @@ const ColumnTitle = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   h2{
     min-width: 110px;

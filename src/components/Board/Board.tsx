@@ -12,6 +12,8 @@ const Board:FC = () => {
 
   const {columns} = useContext(ColumnsContext);
 
+  console.log(columns);
+
   const userNamePopUp = (Local.getUserName()===null) &&
     <DefaultModal>
       <UserName/>

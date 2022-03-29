@@ -40,6 +40,7 @@ export const ColumnsContextProvider: React.FC = ({children}) => {
       if (column.columnId===id) {
         column.columnTitle=title;
       }
+      return column
     }));
     Local.setColumns(JSON.stringify(columns.map((column:{
       columnId: number;
@@ -49,9 +50,9 @@ export const ColumnsContextProvider: React.FC = ({children}) => {
       if (column.columnId===id) {
         column.columnTitle=title;
       }
+      return column
     })));
   }
-
 
   return(
     <ColumnsContext.Provider value={{columns,editColumns}}>
