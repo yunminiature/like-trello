@@ -1,7 +1,9 @@
 import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {CommentsContext} from '../../contexts/CommentsContext'
+import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { addComment, deleteComment } from '../../slices/commentsSlice';
 
 import Comment from '../Comment';
 import DefaultInput from '../../ui/DefaultInput';
@@ -9,6 +11,12 @@ import DefaultButton from '../../ui/DefaultButton';
 
 interface CommentListProps{
   cardId: number;
+  comments:{
+    cardId: number,
+    id: number,
+    cardCommentAuthor: string,
+    cardCommentText: string,
+  }[]
 }
 
 interface InputsComment{
@@ -17,14 +25,10 @@ interface InputsComment{
 
 const CommentsList:FC<CommentListProps> = ({cardId}) => {
 
-  const {
-    comments,
-    addComments
-  } = useContext(CommentsContext);
 
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
-    addComments?.(cardId, data.text);
+    dispatch(addComment(cardId, data.text))
     reset()
   }
 
@@ -44,9 +48,10 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
           <Controller
             control={control}
             name="text"
-            render={({field:{onChange}}) => (
+            render={({field:{onChange, value}}) => (
               <DefaultInput
                 type="text"
+                value={value}
                 defaultValue=""
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   onChange(e.target.value);
@@ -71,7 +76,7 @@ const Comments = styled.div`
   background-color: #fff;
 
   form{
-    width: 100%;
+    width: 100%
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -96,4 +101,15 @@ const CommentInput = styled.input`
   line-height: 20px;
 `
 
-export default CommentsList;
+const mapStateToProps = state => ({
+  comments: state.comments
+})
+
+const mapDispatchToProps = dispatch => ({
+  addComment: text => dispatch(addComment(text))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CommentsList);
