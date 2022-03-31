@@ -7,12 +7,12 @@ import CardsList from '../CardsList';
 import UserName from '../UserName';
 import {Local} from '../../services/LocalStorage'
 import {useSelector, useDispatch} from 'react-redux'
-import type {AppDispatch} from '../../store/index'
-import {columns} from '../../store/Columns/selectors'
+import type {RootState, AppDispatch} from '../../store/index'
 
 const Board:FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
+  const columns = useSelector<RootState>(state => state.columns.columns)
 
   const userNamePopUp = (Local.getUserName()===null) &&
     <DefaultModal>

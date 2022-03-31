@@ -1,4 +1,9 @@
 import { createAction } from '@reduxjs/toolkit';
 import {ActionTypes} from './types';
 
-export const editColumnTitle = createAction<string>(ActionTypes.EDIT_COLUMN_TITLE)
+interface editColumnTitle{
+  id: number;
+  title: string;
+}
+
+export const editColumnTitle = createAction<editColumnTitle>(ActionTypes.EDIT_COLUMN_TITLE)

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {useSelector, useDispatch} from 'react-redux'
 import type {AppDispatch} from '../../store/index'
-import {columns} from '../../store/Columns/selectors'
 import {editColumnTitle} from '../../store/Columns/actions'
 
 import DefaultInput from '../../ui/DefaultInput';
@@ -24,7 +23,10 @@ const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
 
   const {handleSubmit, control} = useForm<InputsColumns>()
   const onSubmit: SubmitHandler<InputsColumns> = data =>{
-    dispatch(editColumnTitle(columnId, data.columnTitle));
+    dispatch(editColumnTitle({
+      id: columnId,
+      title: data.columnTitle
+    }));
     toggleIsEdit()
   }
 

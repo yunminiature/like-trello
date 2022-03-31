@@ -35,7 +35,10 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
     handleSubmit: handleSubmitTitle,
   } = useForm<InputCard>()
   const onSubmitTitle: SubmitHandler<InputCard> = data =>{
-    dispatch(editTitle(cardId, data.inputTitle));
+    dispatch(editTitle({
+      id: cardId,
+      title: data.inputTitle
+    }));
     setIsEditTitle(!isEditTitle);
   }
 
@@ -44,7 +47,10 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
     handleSubmit: handleSubmitDescription,
   } = useForm<InputCard>()
   const onSubmitDescription: SubmitHandler<InputCard> = data =>{
-    dispatch(editDescription(cardId, data.inputDescription));
+    dispatch(editDescription({
+      id: cardId,
+      description: data.inputDescription
+    }));
     setIsEditDescription(!isEditDescription);
   }
 

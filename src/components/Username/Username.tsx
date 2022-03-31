@@ -2,7 +2,7 @@ import React, {FC, useContext} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
 import {useSelector, useDispatch} from 'react-redux'
-import type {AppDispatch} from '../../store/index'
+import type {RootState, AppDispatch} from '../../store/index'
 import {userName} from '../../store/UserName/selectors'
 import {addUserName} from '../../store/UserName/actions'
 

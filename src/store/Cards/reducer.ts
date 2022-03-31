@@ -37,25 +37,30 @@ const initialState: CardsType = {
 
 const cardsReducer = createReducer<CardsType>(initialState, {
   [addCard.type]: (state, action: PayloadAction<CardType>) => {
-    [...state.cards, {
+    return {...state.cards, cards: [...state.cards, {
       id: state.cards[state.cards.length - 1].id+1,
       columnId: action.payload.columnId,
       title: action.payload.title,
       description: action.payload.description,
       author:Local.getUserName(),
       commentsValue: 0
-    }]
+    }]}
   },
 
   [deleteCard.type]: (state, action: PayloadAction<CardType>) => {
-    [...state.cards.filter((item:{
-      id: number;
-      columnId: number;
-      title: string;
-      description: string;
-      author: string;
-      commentsValue: number;
-    }) => item.id !== action.payload.id)]
+    state.cards.map((card:{
+      id: number,
+      columnId: number,
+      title: string,
+      description: string,
+      author:string,
+      commentsValue: number,
+    }) =>
+    {
+      if (card.id!==action.payload.id) {
+        return card;
+      }
+    })
   },
 
   [editTitle.type]: (state, action: PayloadAction<CardType>) => {
