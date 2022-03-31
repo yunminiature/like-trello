@@ -1,7 +1,10 @@
 import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {ColumnsContext} from '../../contexts/ColumnsContext'
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {columns} from '../../store/Columns/selectors'
+import {editColumnTitle} from '../../store/Columns/actions'
 
 import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
@@ -17,13 +20,11 @@ interface InputsColumns{
 
 const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
 
-  console.log(columnId,columnTitle);
-
-  const {editColumns} = useContext(ColumnsContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {handleSubmit, control} = useForm<InputsColumns>()
   const onSubmit: SubmitHandler<InputsColumns> = data =>{
-    editColumns?.(columnId, data.columnTitle)
+    dispatch(editColumnTitle(columnId, data.columnTitle));
     toggleIsEdit()
   }
 

@@ -2,7 +2,9 @@ import React, {FC, useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
-import {CardsContext} from '../../contexts/CardsContext'
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {deleteCard, editTitle, editDescription} from '../../store/Cards/actions'
 
 
 import CommentsList from '../CommentsList';
@@ -26,20 +28,14 @@ interface InputCard{
 
 const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
 
-  const {
-    deleteCard,
-    editTitle,
-    editDescription,
-    addCommentsValue,
-    deleteCommentsValue,
-  } = useContext(CardsContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     control: controlTitle,
     handleSubmit: handleSubmitTitle,
   } = useForm<InputCard>()
   const onSubmitTitle: SubmitHandler<InputCard> = data =>{
-    editTitle?.(cardId, data.inputTitle);
+    dispatch(editTitle(cardId, data.inputTitle));
     setIsEditTitle(!isEditTitle);
   }
 
@@ -48,7 +44,7 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
     handleSubmit: handleSubmitDescription,
   } = useForm<InputCard>()
   const onSubmitDescription: SubmitHandler<InputCard> = data =>{
-    editDescription?.(cardId, data.inputDescription);
+    dispatch(editDescription(cardId, data.inputDescription));
     setIsEditDescription(!isEditDescription);
   }
 
@@ -66,7 +62,7 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
   });
 
   const toggleDeleteCard = () =>{
-    deleteCard?.(cardId)
+      dispatch(deleteCard(cardId))
   }
 
   const [isEditTitle, setIsEditTitle] = useState(false)

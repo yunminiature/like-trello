@@ -1,19 +1,14 @@
 import React from 'react';
 
 import Board from './Board';
-import {UserNameContextProvider} from '../contexts/UserNameContext'
-import {ColumnsContextProvider} from '../contexts/ColumnsContext'
-import {CardsContextProvider} from '../contexts/CardsContext'
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const App = () => {
   return (
-    <UserNameContextProvider>
-      <ColumnsContextProvider>
-        <CardsContextProvider>
-          <Board/>
-        </CardsContextProvider>
-      </ColumnsContextProvider>
-    </UserNameContextProvider>
+    <Provider store={store}>
+      <Board/>
+    </Provider>
   )
 }
 

@@ -1,22 +1,17 @@
-import React, {FC, useState, useContext} from 'react';
+import React, {FC} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import { connect } from 'react-redux'
-import { useSelector, useDispatch } from 'react-redux'
-import { addComment, deleteComment } from '../../slices/commentsSlice';
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {comments} from '../../store/Comments/selectors'
+import {addComment} from '../../store/Comments/actions'
 
 import Comment from '../Comment';
 import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
 
 interface CommentListProps{
-  cardId: number;
-  comments:{
-    cardId: number,
-    id: number,
-    cardCommentAuthor: string,
-    cardCommentText: string,
-  }[]
+  cardId: number
 }
 
 interface InputsComment{
@@ -25,14 +20,20 @@ interface InputsComment{
 
 const CommentsList:FC<CommentListProps> = ({cardId}) => {
 
+  const dispatch = useDispatch<AppDispatch>();
 
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
-    dispatch(addComment(cardId, data.text))
+    dispatch(addComment(data.text))
     reset()
   }
 
-  const commentsList = comments.map(comment =>
+  const commentsList = comments.map((comment:{
+    cardId: number,
+    id: number,
+    cardCommentAuthor: string,
+    cardCommentText: string
+  }) =>
     (cardId===comment.cardId) &&
       <Comment
         key={comment.id}
@@ -101,15 +102,4 @@ const CommentInput = styled.input`
   line-height: 20px;
 `
 
-const mapStateToProps = state => ({
-  comments: state.comments
-})
-
-const mapDispatchToProps = dispatch => ({
-  addComment: text => dispatch(addComment(text))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CommentsList);
+export default CommentsList

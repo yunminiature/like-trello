@@ -1,8 +1,11 @@
-import React, {FC, useState, useEffect, useContext} from 'react';
+import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
-import {CardsContext} from '../../contexts/CardsContext'
+import { useSelector, useDispatch } from 'react-redux'
+import type { AppDispatch } from '../../store/index'
+import {cards} from '../../store/Cards/selectors'
+import {addCard, deleteCard, editTitle, editDescription} from '../../store/Cards/actions'
 
 import Card from '../Card';
 import DefaultInput from '../../ui/DefaultInput';
@@ -19,14 +22,11 @@ interface InputsNewCard{
 
 const CardList:FC<CardListProps> = ({cardListId}) => {
 
-  const {
-    cards,
-    addCard
-  } = useContext(CardsContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {handleSubmit, control, reset} = useForm<InputsNewCard>({defaultValues: {newCardTitle: "" , newCardDescription: ""}})
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
-    addCard?.(cardListId, data.newCardTitle, data.newCardDescription);
+    dispatch(addCard(cardListId, data.newCardTitle, data.newCardDescription))
     reset()
   }
 

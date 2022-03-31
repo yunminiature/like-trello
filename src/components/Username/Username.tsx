@@ -1,8 +1,12 @@
 import React, {FC, useContext} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {userName} from '../../store/UserName/selectors'
+import {addUserName} from '../../store/UserName/actions'
 
-import {UserNameContext} from '../../contexts/UserNameContext'
+
 import DefaultButton from '../../ui/DefaultButton';
 import DefaultInput from '../../ui/DefaultInput';
 
@@ -12,7 +16,7 @@ interface InputsUserName{
 
 const UserName:FC = () => {
 
-  const {addUserName} = useContext(UserNameContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {register, handleSubmit, watch, formState: {errors}} = useForm<InputsUserName>()
   const onSubmit: SubmitHandler<InputsUserName> = data =>{

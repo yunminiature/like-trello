@@ -1,6 +1,8 @@
 import React, {FC, useContext} from 'react';
 import styled from 'styled-components';
-import {CommentsContext} from '../../contexts/CommentsContext'
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {deleteComment} from '../../store/Comments/actions'
 
 interface CommentProps{
   cardId: number,
@@ -11,12 +13,10 @@ interface CommentProps{
 
 const Comment:FC<CommentProps> = ({cardId,id,cardCommentAuthor,cardCommentText}) => {
 
-  const {
-    deleteComments
-  } = useContext(CommentsContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const deleteCardComments = () =>{
-    deleteComments?.(cardId, id)
+    dispatch(deleteComment(id));
   }
 
   return(

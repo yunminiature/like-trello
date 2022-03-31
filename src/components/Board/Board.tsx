@@ -6,13 +6,13 @@ import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
 import {Local} from '../../services/LocalStorage'
-import {ColumnsContext} from '../../contexts/ColumnsContext'
+import {useSelector, useDispatch} from 'react-redux'
+import type {AppDispatch} from '../../store/index'
+import {columns} from '../../store/Columns/selectors'
 
 const Board:FC = () => {
 
-  const {columns} = useContext(ColumnsContext);
-
-  console.log(columns);
+  const dispatch = useDispatch<AppDispatch>();
 
   const userNamePopUp = (Local.getUserName()===null) &&
     <DefaultModal>
