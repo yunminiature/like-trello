@@ -23,17 +23,23 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
   const dispatch = useDispatch<AppDispatch>();
   const comments = useSelector<RootState>(commentsSelector)
 
+  console.log(comments)
+
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
-    dispatch(addComment(data.text))
+    dispatch(addComment({
+      id: 0,
+      cardId: cardId,
+      text: data.text
+    }))
     reset()
   }
 
   const commentsList = comments.map((comment:{
     cardId?: number,
     id: number,
-    cardCommentAuthor?: string,
-    cardCommentText?: string
+    author?: string,
+    text?: string
   }) =>
     (cardId===comment.cardId) &&
       <Comment

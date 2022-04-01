@@ -7,11 +7,11 @@ import {deleteComment} from '../../store/Comments/actions'
 interface CommentProps{
   cardId?: number,
   id: number,
-  cardCommentAuthor?: string,
-  cardCommentText?: string
+  author?: string,
+  text?: string
 }
 
-const Comment:FC<CommentProps> = ({cardId,id,cardCommentAuthor,cardCommentText}) => {
+const Comment:FC<CommentProps> = ({cardId,id,author,text}) => {
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -21,8 +21,8 @@ const Comment:FC<CommentProps> = ({cardId,id,cardCommentAuthor,cardCommentText})
 
   return(
     <CommentStyle>
-      <CommentAuthor>{cardCommentAuthor}:</CommentAuthor>
-      <CommentText>{cardCommentText}</CommentText>
+      <CommentAuthor>{author}:</CommentAuthor>
+      <CommentText>{text}</CommentText>
       <CommentButton onClick={deleteCardComments}>Удалить</CommentButton>
     </CommentStyle>
   )

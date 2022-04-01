@@ -29,6 +29,7 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
     dispatch(addCard({
       id: 0,
+      columnId:cardListId,
       title: data.newCardTitle,
       description: data.newCardDescription
     }))

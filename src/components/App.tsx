@@ -2,12 +2,15 @@ import React from 'react';
 
 import Board from './Board';
 import { Provider } from 'react-redux';
-import store from '../store';
+import {PersistGate} from 'redux-persist/integration/react';
+import store, {persistor} from '../store';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <Board/>
+      <PersistGate loading={null} persistor={persistor}>
+        <Board/>
+      </PersistGate>
     </Provider>
   )
 }

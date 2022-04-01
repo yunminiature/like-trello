@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import {ActionTypes} from './types';
+import {ActionTypes, CommentType} from './types';
 
-export const addComment = createAction<string>(ActionTypes.ADD_COMMENT)
+export const addComment = createAction<CommentType>(ActionTypes.ADD_COMMENT)
 export const deleteComment = createAction<number>(ActionTypes.DELETE_COMMENT)
