@@ -1,3 +1,3 @@
 import { RootState } from '../index';
 
-export const userName = (state: RootState) => state.userName;
+export const userNameSelector = (state: RootState) => state.userName;

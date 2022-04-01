@@ -5,10 +5,10 @@ import type {AppDispatch} from '../../store/index'
 import {deleteComment} from '../../store/Comments/actions'
 
 interface CommentProps{
-  cardId: number,
+  cardId?: number,
   id: number,
-  cardCommentAuthor: string,
-  cardCommentText: string
+  cardCommentAuthor?: string,
+  cardCommentText?: string
 }
 
 const Comment:FC<CommentProps> = ({cardId,id,cardCommentAuthor,cardCommentText}) => {

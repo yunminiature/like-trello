@@ -1,3 +1,3 @@
 import { RootState } from '../index';
 
-export const comments = (state: RootState) => state.comments;
+export const commentsSelector = (state: RootState) => state.comments;

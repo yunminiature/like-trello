@@ -14,19 +14,19 @@ import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
 
 interface CardProps{
-  cardId: number;
-  cardTitle: string;
-  cardDescription: string;
-  cardAuthor: string;
-  cardCommentsValue: number;
+  id: number;
+  title?: string;
+  description?: string;
+  author?: string;
+  commentsCount?: number;
 }
 
 interface InputCard{
-  inputTitle: string;
-  inputDescription: string;
+  title: string;
+  description: string;
 }
 
-const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, cardCommentsValue}) => {
+const Card:FC<CardProps> = ({id, title, description, author, commentsCount}) => {
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -36,8 +36,8 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
   } = useForm<InputCard>()
   const onSubmitTitle: SubmitHandler<InputCard> = data =>{
     dispatch(editTitle({
-      id: cardId,
-      title: data.inputTitle
+      id: id,
+      title: data.title
     }));
     setIsEditTitle(!isEditTitle);
   }
@@ -48,8 +48,8 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
   } = useForm<InputCard>()
   const onSubmitDescription: SubmitHandler<InputCard> = data =>{
     dispatch(editDescription({
-      id: cardId,
-      description: data.inputDescription
+      id: id,
+      description: data.description
     }));
     setIsEditDescription(!isEditDescription);
   }
@@ -68,7 +68,7 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
   });
 
   const toggleDeleteCard = () =>{
-      dispatch(deleteCard(cardId))
+      dispatch(deleteCard(id))
   }
 
   const [isEditTitle, setIsEditTitle] = useState(false)
@@ -81,12 +81,12 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
     setIsEditDescription(!isEditDescription);
   }
 
-  const title = (isEditTitle)
+  const titleForm = (isEditTitle)
     ?<DefaultSection>
       <form onSubmit={handleSubmitTitle(onSubmitTitle)}>
         <Controller
           control={controlTitle}
-          name="inputTitle"
+          name="title"
           rules={{
             required:"Обязательное поле"
           }}
@@ -95,7 +95,7 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
               label="Название: "
               type="text"
               value={value}
-              defaultValue={cardTitle}
+              defaultValue={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
               }}
@@ -107,22 +107,22 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
      </DefaultSection>
     :<DefaultSection>
       <h3>Название: </h3>
-      <p>{cardTitle}</p>
+      <p>{title}</p>
       <DefaultButton type="button" onClick={toggleIsEditTitle} value="Изменить"/>
      </DefaultSection>;
 
-  const description = (isEditDescription)
+  const descriptionForm = (isEditDescription)
     ?<DefaultSection>
       <form onSubmit={handleSubmitDescription(onSubmitDescription)}>
         <Controller
           control={controlDescription}
-          name="inputDescription"
+          name="description"
           render={({field:{onChange, value}}) => (
             <DefaultInput
               label="Описание: "
               type="text"
               value={value}
-              defaultValue={cardDescription}
+              defaultValue={description}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value);
               }}
@@ -134,29 +134,29 @@ const Card:FC<CardProps> = ({cardId, cardTitle, cardDescription, cardAuthor, car
      </DefaultSection>
     :<DefaultSection>
       <h3>Описание: </h3>
-      <p>{cardDescription}</p>
+      <p>{description}</p>
       <DefaultButton type="button" onClick={toggleIsEditDescription} value="Изменить"/>
      </DefaultSection>;
 
   const card =
     <CardStyle onClick={toggleIsOpen}>
-      <CardTitle>{cardTitle}</CardTitle>
-      <CardDescription>{cardDescription}</CardDescription>
-      <CardComments>Комментарии: {cardCommentsValue}</CardComments>
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+      <CardComments>Комментарии: {commentsCount}</CardComments>
     </CardStyle>
 
   const openСard = (isOpen) &&
   <DefaultModal>
     <OpenCard>
       <DefaultButton type="button" onClick={toggleIsClose} value="Закрыть"/>
-      {title}
-      {description}
+      {titleForm}
+      {descriptionForm}
       <DefaultSection>
         <h3>Автор: </h3>
-        <p>{cardAuthor}</p>
+        <p>{author}</p>
       </DefaultSection>
       <CommentsList
-        cardId={cardId}
+        cardId={id}
       />
       <DefaultButton type="button" onClick={toggleDeleteCard} value="Удалить"/>
     </OpenCard>

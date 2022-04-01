@@ -7,11 +7,11 @@ export const enum ActionTypes {
 
 export interface CardType {
   id: number,
-  columnId: number,
-  title: string,
-  description: string,
-  author: string,
-  commentsValue: number
+  columnId?: number,
+  title?: string,
+  description?: string,
+  author?: string,
+  commentsCount?: number
 }
 
 export interface CardsType {

@@ -16,21 +16,21 @@ const initialState: CardsType = {
       title: 'Накопить на слона',
       description: '',
       author:'noname',
-      commentsValue: 2,
+      commentsCount: 2,
     },
     { id: 1,
       columnId: 3,
       title: 'Выбрать слона',
       description: '',
       author:'noname',
-      commentsValue: 1,
+      commentsCount: 1,
     },
     { id: 2,
       columnId: 0,
       title: 'Купить слона',
       description: '',
       author:'noname',
-      commentsValue: 0,
+      commentsCount: 0,
     },
   ]
 };
@@ -43,18 +43,18 @@ const cardsReducer = createReducer<CardsType>(initialState, {
       title: action.payload.title,
       description: action.payload.description,
       author:Local.getUserName(),
-      commentsValue: 0
+      commentsCount: 0
     }]}
   },
 
   [deleteCard.type]: (state, action: PayloadAction<CardType>) => {
     state.cards.map((card:{
       id: number,
-      columnId: number,
-      title: string,
-      description: string,
-      author:string,
-      commentsValue: number,
+      columnId?: number,
+      title?: string,
+      description?: string,
+      author?:string,
+      commentsCount?: number,
     }) =>
     {
       if (card.id!==action.payload.id) {
@@ -66,11 +66,11 @@ const cardsReducer = createReducer<CardsType>(initialState, {
   [editTitle.type]: (state, action: PayloadAction<CardType>) => {
     state.cards.map((card:{
       id: number,
-      columnId: number,
-      title: string,
-      description: string,
-      author:string,
-      commentsValue: number,
+      columnId?: number,
+      title?: string,
+      description?: string,
+      author?:string,
+      commentsCount?: number,
     }) =>
     {
       if (card.id===action.payload.id) {
@@ -83,11 +83,11 @@ const cardsReducer = createReducer<CardsType>(initialState, {
   [editDescription.type]: (state, action: PayloadAction<CardType>) => {
     state.cards.map((card:{
       id: number,
-      columnId: number,
-      title: string,
-      description: string,
-      author:string,
-      commentsValue: number,
+      columnId?: number,
+      title?: string,
+      description?: string,
+      author?:string,
+      commentsCount?: number,
     }) =>
     {
       if (card.id===action.payload.id) {

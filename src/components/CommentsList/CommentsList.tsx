@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {useSelector, useDispatch} from 'react-redux'
+import {commentsSelector} from '../../store/Comments/selectors'
 import type {RootState, AppDispatch} from '../../store/index'
 import {addComment} from '../../store/Comments/actions'
 
@@ -20,7 +21,7 @@ interface InputsComment{
 const CommentsList:FC<CommentListProps> = ({cardId}) => {
 
   const dispatch = useDispatch<AppDispatch>();
-  const comments = useSelector<RootState>(state => state.comments.comments)
+  const comments = useSelector<RootState>(commentsSelector)
 
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
@@ -29,10 +30,10 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
   }
 
   const commentsList = comments.map((comment:{
-    cardId: number,
+    cardId?: number,
     id: number,
-    cardCommentAuthor: string,
-    cardCommentText: string
+    cardCommentAuthor?: string,
+    cardCommentText?: string
   }) =>
     (cardId===comment.cardId) &&
       <Comment

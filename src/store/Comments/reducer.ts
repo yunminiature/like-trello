@@ -32,22 +32,28 @@ const initialState: CommentsType = {
 
 const commentsReducer = createReducer<CommentsType>(initialState, {
   [addComment.type]: (state, action: PayloadAction<CommentType>) => {
-    comments: [...state.comments,
+    return {...state.comments, comments: [...state.comments,
       {
         cardId: action.payload.cardId,
         id: state.comments[state.comments.length - 1].id+1,
         author: Local.getUserName(),
         text: action.payload.text
       },
-    ]
+    ]}
   },
   [deleteComment.type]: (state, action: PayloadAction<CommentType>) => {
-    [...state.comments.filter((item:{
-      cardId: number,
+    state.comments.map((comment:{
+      cardId?: number,
       id: number,
-      author: string,
-      text: string,
-    }) => item.id !== action.payload.id)]}
+      author?: string,
+      text?: string,
+    }) =>
+    {
+      if (comment.id!==action.payload.id) {
+        return comment;
+      }
+    })
+  }
 });
 
 export default commentsReducer

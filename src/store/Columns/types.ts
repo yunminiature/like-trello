@@ -3,8 +3,8 @@ export const enum ActionTypes {
 }
 
 export interface ColumnType {
-  id: number,
-  title: string,
+  id?: number,
+  title?: string,
 }
 
 export interface ColumnsType {

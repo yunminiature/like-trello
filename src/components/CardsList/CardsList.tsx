@@ -4,6 +4,7 @@ import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {Local} from '../../services/LocalStorage'
 import {useSelector, useDispatch} from 'react-redux'
 import type {RootState, AppDispatch} from '../../store/index'
+import {cardsSelector} from '../../store/Cards/selectors'
 import {addCard, deleteCard, editTitle, editDescription} from '../../store/Cards/actions'
 
 import Card from '../Card';
@@ -22,11 +23,12 @@ interface InputsNewCard{
 const CardList:FC<CardListProps> = ({cardListId}) => {
 
   const dispatch = useDispatch<AppDispatch>();
-  const cards = useSelector<RootState>(state => state.cards.cards)
+  const cards = useSelector<RootState>(cardsSelector);
 
   const {handleSubmit, control, reset} = useForm<InputsNewCard>({defaultValues: {newCardTitle: "" , newCardDescription: ""}})
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
     dispatch(addCard({
+      id: 0,
       title: data.newCardTitle,
       description: data.newCardDescription
     }))
@@ -39,16 +41,16 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
   }
 
   const cardsList = cards.map((card:{
-    cardId: number;
-    columnId: number;
-    cardTitle: string;
-    cardDescription: string;
-    cardAuthor:string;
-    cardCommentsValue:number;
+    id: number;
+    columnId?: number;
+    title?: string;
+    description?: string;
+    author?:string;
+    commentsCount?:number;
   }) =>
     (cardListId===card.columnId) &&
       <Card
-        key={card.cardId}
+        key={card.id}
         {...card}
       />
   )

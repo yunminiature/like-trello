@@ -2,8 +2,8 @@ import React, {FC, useContext} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
 import {useSelector, useDispatch} from 'react-redux'
+import {userNameSelector} from '../../store/UserName/selectors'
 import type {RootState, AppDispatch} from '../../store/index'
-import {userName} from '../../store/UserName/selectors'
 import {addUserName} from '../../store/UserName/actions'
 
 
@@ -17,6 +17,7 @@ interface InputsUserName{
 const UserName:FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
+  const cards = useSelector(userNameSelector);
 
   const {register, handleSubmit, watch, formState: {errors}} = useForm<InputsUserName>()
   const onSubmit: SubmitHandler<InputsUserName> = data =>{

@@ -9,23 +9,23 @@ import DefaultInput from '../../ui/DefaultInput';
 import DefaultButton from '../../ui/DefaultButton';
 
 interface ColumnProps{
-  columnId: number;
-  columnTitle: string;
+  id: number;
+  title: string;
 }
 
 interface InputsColumns{
-  columnTitle: string;
+  title: string;
 }
 
-const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
+const Column:FC<ColumnProps> = ({id, title, children}) => {
 
   const dispatch = useDispatch<AppDispatch>();
 
   const {handleSubmit, control} = useForm<InputsColumns>()
   const onSubmit: SubmitHandler<InputsColumns> = data =>{
     dispatch(editColumnTitle({
-      id: columnId,
-      title: data.columnTitle
+      id: id,
+      title: data.title
     }));
     toggleIsEdit()
   }
@@ -35,18 +35,18 @@ const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
     setIsEdit(!isEdit);
   }
 
-  const title = (isEdit)
+  const titleForm = (isEdit)
   ? <form onSubmit={handleSubmit(onSubmit)}>
       <Controller
         control={control}
-        name="columnTitle"
+        name="title"
         rules={{
           required:"Обязательное поле"
         }}
         render={({field:{onChange, value}}) => (
           <DefaultInput
             type="text"
-            defaultValue={columnTitle}
+            defaultValue={title}
             value={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onChange(e.target.value);
@@ -57,14 +57,14 @@ const Column:FC<ColumnProps> = ({columnId,columnTitle, children}) => {
       <DefaultButton type="submit" value="Сохранить"/>
     </form>
   : <>
-      <h2>{columnTitle}</h2>
+      <h2>{title}</h2>
       <DefaultButton type="button" onClick={toggleIsEdit} value="Изменить"/>
     </>
 
   return (
     <ColumnElement>
       <ColumnTitle>
-        {title}
+        {titleForm}
       </ColumnTitle>
       {children}
     </ColumnElement>
