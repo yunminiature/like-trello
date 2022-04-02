@@ -3,7 +3,7 @@ export const enum ActionTypes {
 }
 
 export interface ColumnType {
-  id?: number,
+  id: number,
   title?: string,
 }
 

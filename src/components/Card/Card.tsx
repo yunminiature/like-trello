@@ -1,7 +1,6 @@
 import React, {FC, useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {Local} from '../../services/LocalStorage'
 import {useSelector, useDispatch} from 'react-redux'
 import type {AppDispatch} from '../../store/index'
 import {deleteCard, editTitle, editDescription} from '../../store/Cards/actions'

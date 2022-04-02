@@ -1,5 +1,4 @@
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
-import {Local} from '../../services/LocalStorage'
 import {CommentsType, CommentType} from './types';
 import {
   addComment,
@@ -36,7 +35,7 @@ const commentsReducer = createReducer<CommentsType>(initialState, {
       {
         cardId: action.payload.cardId,
         id: state.comments[state.comments.length - 1].id+1,
-        author: Local.getUserName(),
+        author: action.payload.author,
         text: action.payload.text
       },
     ]}

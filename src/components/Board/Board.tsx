@@ -5,25 +5,23 @@ import DefaultModal from '../../ui/DefaultModal';
 import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
-import {Local} from '../../services/LocalStorage'
-import {useSelector, useDispatch} from 'react-redux'
-import {columnsSelector} from '../../store/Columns/selectors'
 import type {RootState, AppDispatch} from '../../store/index'
+import {useUserNameSelector, useUserNameDispatch} from '../../store/UserName/selectors'
+import {useColumnsSelector, useColumnsDispatch} from '../../store/Columns/selectors'
+
 
 const Board:FC = () => {
 
-  const dispatch = useDispatch<AppDispatch>();
-  const columns = useSelector<RootState>(columnsSelector)
+  const userName = useUserNameSelector(state => state.userName.userName)
+  const columns = useColumnsSelector(state => state.columns.columns)
+  const dispatch = useColumnsDispatch()
 
-  const userNamePopUp = (Local.getUserName()===null) &&
+  const userNamePopUp = (userName===null) &&
     <DefaultModal>
       <UserName/>
     </DefaultModal>
 
-  const columnList = columns.map((column:{
-    id: number;
-    title:string
-  }) =>
+  const columnList = columns.map(column =>
     <Column
       key={column.id}
       id={column.id}

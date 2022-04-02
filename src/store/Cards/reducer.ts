@@ -1,5 +1,4 @@
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
-import {Local} from '../../services/LocalStorage'
 import {CardsType, CardType} from './types';
 import {
   addCard,
@@ -42,7 +41,7 @@ const cardsReducer = createReducer<CardsType>(initialState, {
       columnId: action.payload.columnId,
       title: action.payload.title,
       description: action.payload.description,
-      author:Local.getUserName(),
+      author:action.payload.author,
       commentsCount: 0
     }]}
   },

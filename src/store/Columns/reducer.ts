@@ -1,5 +1,4 @@
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
-import {Local} from '../../services/LocalStorage'
 import {ColumnsType, ColumnType} from './types';
 import {
   editColumnTitle
@@ -30,7 +29,7 @@ const initialState: ColumnsType = {
 const columnsReducer = createReducer<ColumnsType>(initialState, {
   [editColumnTitle.type]: (state, action: PayloadAction<ColumnType>) => {
     state.columns.map((column:{
-      id?: number;
+      id: number;
       title?:string
     }) =>
     {

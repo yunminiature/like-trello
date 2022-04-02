@@ -1,3 +1,5 @@
-import { RootState } from '../index';
+import {RootState, AppDispatch} from '../index';
+import {useSelector, TypedUseSelectorHook, useDispatch} from 'react-redux'
 
-export const userNameSelector = (state: RootState) => state.userName;
+export const useUserNameSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useUserNameDispatch = () => useDispatch<AppDispatch>()

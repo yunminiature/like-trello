@@ -10,7 +10,7 @@ import DefaultButton from '../../ui/DefaultButton';
 
 interface ColumnProps{
   id: number;
-  title: string;
+  title?: string;
 }
 
 interface InputsColumns{

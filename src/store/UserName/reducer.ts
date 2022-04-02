@@ -1,5 +1,4 @@
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
-import {Local} from '../../services/LocalStorage'
 import {UserNameType} from './types';
 import {
   addUserName
@@ -7,7 +6,7 @@ import {
 
 
 const initialState: UserNameType = {
-  userName:""
+  userName:"noname"
 };
 
 const userNameReducer = createReducer<UserNameType>(initialState, {

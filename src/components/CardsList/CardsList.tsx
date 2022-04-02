@@ -1,10 +1,10 @@
 import React, {FC, useState, useContext} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {Local} from '../../services/LocalStorage'
 import {useSelector, useDispatch} from 'react-redux'
 import type {RootState, AppDispatch} from '../../store/index'
-import {cardsSelector} from '../../store/Cards/selectors'
+import {useUserNameSelector, useUserNameDispatch} from '../../store/UserName/selectors'
+import {useCardsSelector, useCardsDispatch} from '../../store/Cards/selectors'
 import {addCard, deleteCard, editTitle, editDescription} from '../../store/Cards/actions'
 
 import Card from '../Card';
@@ -22,8 +22,9 @@ interface InputsNewCard{
 
 const CardList:FC<CardListProps> = ({cardListId}) => {
 
-  const dispatch = useDispatch<AppDispatch>();
-  const cards = useSelector<RootState>(cardsSelector);
+  const userName = useUserNameSelector(state => state.userName.userName)
+  const cards = useCardsSelector(state => state.cards.cards)
+  const dispatch = useCardsDispatch()
 
   const {handleSubmit, control, reset} = useForm<InputsNewCard>({defaultValues: {newCardTitle: "" , newCardDescription: ""}})
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{
@@ -31,7 +32,8 @@ const CardList:FC<CardListProps> = ({cardListId}) => {
       id: 0,
       columnId:cardListId,
       title: data.newCardTitle,
-      description: data.newCardDescription
+      description: data.newCardDescription,
+      author: userName
     }))
     reset()
   }
