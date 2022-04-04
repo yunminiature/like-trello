@@ -28,10 +28,7 @@ const initialState: ColumnsType = {
 
 const columnsReducer = createReducer<ColumnsType>(initialState, {
   [editColumnTitle.type]: (state, action: PayloadAction<ColumnType>) => {
-    state.columns.map((column:{
-      id: number;
-      title?:string
-    }) =>
+    state.columns.map((column:ColumnType) =>
     {
       if (column.id===action.payload.id) {
         column.title=action.payload.title;

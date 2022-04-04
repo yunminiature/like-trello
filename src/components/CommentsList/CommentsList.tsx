@@ -1,9 +1,7 @@
 import React, {FC} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {useSelector, useDispatch} from 'react-redux'
-import type {RootState, AppDispatch} from '../../store/index'
-import {useUserNameSelector, useUserNameDispatch} from '../../store/UserName/selectors'
+import {useUserNameSelector} from '../../store/UserName/selectors'
 import {useCommentsSelector, useCommentsDispatch} from '../../store/Comments/selectors'
 import {addComment} from '../../store/Comments/actions'
 
@@ -24,8 +22,6 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
   const userName = useUserNameSelector(state => state.userName.userName)
   const comments = useCommentsSelector(state => state.comments.comments)
   const dispatch = useCommentsDispatch()
-
-  console.log(comments)
 
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{
@@ -85,6 +81,12 @@ const Comments = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;
+`
+
+const AddingComment = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   form{
     width: 100%
@@ -93,23 +95,11 @@ const Comments = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`
 
-const AddingComment = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-const CommentInput = styled.input`
-  width: 80%;
-  min-width: 100px;
-  margin: 20px 0 0;
-  padding: 5px 0;
-  border: 3px solid #6e60ff;
-  border-radius: 10px;
-  font-family: consolas;
-  font-size: 20px;
-  line-height: 20px;
+  input{
+    border: 3px solid #6e60ff;
+    border-radius: 10px;
+  }
 `
 
 export default CommentsList

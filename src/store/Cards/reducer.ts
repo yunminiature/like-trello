@@ -1,3 +1,4 @@
+import * as _ from "lodash"
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
 import {CardsType, CardType} from './types';
 import {
@@ -36,41 +37,24 @@ const initialState: CardsType = {
 
 const cardsReducer = createReducer<CardsType>(initialState, {
   [addCard.type]: (state, action: PayloadAction<CardType>) => {
-    return {...state.cards, cards: [...state.cards, {
+    state.cards = _.concat(state.cards, {
       id: state.cards[state.cards.length - 1].id+1,
       columnId: action.payload.columnId,
       title: action.payload.title,
       description: action.payload.description,
       author:action.payload.author,
       commentsCount: 0
-    }]}
+    })
   },
 
-  [deleteCard.type]: (state, action: PayloadAction<CardType>) => {
-    state.cards.map((card:{
-      id: number,
-      columnId?: number,
-      title?: string,
-      description?: string,
-      author?:string,
-      commentsCount?: number,
-    }) =>
-    {
-      if (card.id!==action.payload.id) {
-        return card;
-      }
+  [deleteCard.type]: (state, action: PayloadAction<number>) => {
+    state.cards = _.remove(state.cards, function(card:CardType) {
+      return card.id !== action.payload;
     })
   },
 
   [editTitle.type]: (state, action: PayloadAction<CardType>) => {
-    state.cards.map((card:{
-      id: number,
-      columnId?: number,
-      title?: string,
-      description?: string,
-      author?:string,
-      commentsCount?: number,
-    }) =>
+    state.cards.map((card:CardType) =>
     {
       if (card.id===action.payload.id) {
         card.title=action.payload.title;
@@ -80,14 +64,7 @@ const cardsReducer = createReducer<CardsType>(initialState, {
   },
 
   [editDescription.type]: (state, action: PayloadAction<CardType>) => {
-    state.cards.map((card:{
-      id: number,
-      columnId?: number,
-      title?: string,
-      description?: string,
-      author?:string,
-      commentsCount?: number,
-    }) =>
+    state.cards.map((card:CardType) =>
     {
       if (card.id===action.payload.id) {
         card.description=action.payload.description;
