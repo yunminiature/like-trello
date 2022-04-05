@@ -5,7 +5,9 @@ import {
   addCard,
   deleteCard,
   editTitle,
-  editDescription
+  editDescription,
+  addCommentsCount,
+  deleteCommentsCount
 } from './actions'
 
 
@@ -68,6 +70,26 @@ const cardsReducer = createReducer<CardsType>(initialState, {
     {
       if (card.id===action.payload.id) {
         card.description=action.payload.description;
+      }
+      return card
+    })
+  },
+
+  [addCommentsCount.type]: (state, action: PayloadAction<number>) => {
+    state.cards.map((card:CardType) =>
+    {
+      if (card.id===action.payload && card.commentsCount!==undefined) {
+        card.commentsCount++;
+      }
+      return card
+    })
+  },
+
+  [deleteCommentsCount.type]: (state, action: PayloadAction<number>) => {
+    state.cards.map((card:CardType) =>
+    {
+      if (card.id===action.payload && card.commentsCount!==undefined) {
+        card.commentsCount--;
       }
       return card
     })

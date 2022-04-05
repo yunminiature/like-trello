@@ -1,7 +1,7 @@
-import React, {FC, useState, useContext} from 'react';
+import React, {FC, useState} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import type {AppDispatch} from '../../store/index'
 import {editColumnTitle} from '../../store/Columns/actions'
 

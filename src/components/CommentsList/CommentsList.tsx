@@ -4,6 +4,7 @@ import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import {useAppSelector, useAppDispatch} from '../../store/index'
 import {selectUserName} from '../../store/UserName/selectors'
 import {selectComments} from '../../store/Comments/selectors'
+import {addCommentsCount} from '../../store/Cards/actions'
 import {addComment} from '../../store/Comments/actions'
 
 import Comment from '../Comment';
@@ -32,11 +33,12 @@ const CommentsList:FC<CommentListProps> = ({cardId}) => {
       author: userName,
       text: data.text
     }))
+    dispatch(addCommentsCount(cardId))
     reset()
   }
 
   const commentsList = comments.map((comment:{
-    cardId?: number,
+    cardId: number,
     id: number,
     author?: string,
     text?: string

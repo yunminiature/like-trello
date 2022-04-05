@@ -15,9 +15,9 @@ const Board:FC = () => {
   const userName = useAppSelector(selectUserName)
   const columns = useAppSelector(selectColumns)
 
-  const userNamePopUp = (userName===null) &&
+  const userNamePopUp = (userName===undefined) &&
     <DefaultModal>
-      <UserName/>
+      <UserName />
     </DefaultModal>
 
   const columnList = columns.map(column =>

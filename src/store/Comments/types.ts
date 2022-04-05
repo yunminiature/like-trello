@@ -4,7 +4,7 @@ export const enum ActionTypes {
 }
 
 export interface CommentType {
-  cardId?: number;
+  cardId: number;
   id: number;
   author?: string;
   text?: string

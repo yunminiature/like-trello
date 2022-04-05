@@ -6,12 +6,11 @@ import {
 
 
 const initialState: UserNameType = {
-  userName:"noname"
-};
+} as UserNameType;
 
 const userNameReducer = createReducer<UserNameType>(initialState, {
-  [addUserName.type]: (state, action: PayloadAction<UserNameType>) => {
-    state.userName=action.payload.userName
+  [addUserName.type]: (state, action: PayloadAction<string>) => {
+    state.userName=action.payload
   }
 })
 
