@@ -10,6 +10,7 @@ import {
   REGISTER
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import {useSelector, TypedUseSelectorHook, useDispatch} from 'react-redux'
 import { commentsReducer } from './Comments/index';
 import { cardsReducer } from './Cards/index';
 import { columnsReducer } from './Columns/index';
@@ -29,8 +30,6 @@ const PersistConfig = {
 
 const PersistedReducer = persistReducer(PersistConfig, RootReducer)
 
-
-
 const store = configureStore({
   reducer: PersistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -45,5 +44,8 @@ const persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+
 export default store;
 export {persistor};

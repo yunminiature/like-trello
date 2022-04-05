@@ -1,5 +1,4 @@
-import {RootState, AppDispatch} from '../index';
-import {useSelector, TypedUseSelectorHook, useDispatch} from 'react-redux'
+import {RootState} from '../index';
+import {ColumnType} from './types';
 
-export const useColumnsSelector: TypedUseSelectorHook<RootState> = useSelector;
-export const useColumnsDispatch = () => useDispatch<AppDispatch>()
+export const selectColumns = (state:RootState): ColumnType[] => state.columns.columns

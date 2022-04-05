@@ -1,8 +1,9 @@
 import React, {FC, useState} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {useUserNameSelector} from '../../store/UserName/selectors'
-import {useCardsSelector, useCardsDispatch} from '../../store/Cards/selectors'
+import {useAppSelector, useAppDispatch} from '../../store/index'
+import {selectUserName} from '../../store/UserName/selectors'
+import {selectCards} from '../../store/Cards/selectors'
 import {addCard} from '../../store/Cards/actions'
 
 import Card from '../Card';
@@ -20,11 +21,9 @@ interface InputsNewCard{
 
 const CardList:FC<CardListProps> = ({cardListId}) => {
 
-  const userName = useUserNameSelector(state => state.userName.userName)
-  const cards = useCardsSelector(state => state.cards.cards)
-  const dispatch = useCardsDispatch()
-
-  console.log(cards)
+  const userName = useAppSelector(selectUserName)
+  const cards = useAppSelector(selectCards)
+  const dispatch = useAppDispatch()
 
   const {handleSubmit, control, reset} = useForm<InputsNewCard>({defaultValues: {newCardTitle: "" , newCardDescription: ""}})
   const onSubmit: SubmitHandler<InputsNewCard> = data =>{

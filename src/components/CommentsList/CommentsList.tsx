@@ -1,8 +1,9 @@
 import React, {FC} from 'react';
 import styled from 'styled-components';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import {useUserNameSelector} from '../../store/UserName/selectors'
-import {useCommentsSelector, useCommentsDispatch} from '../../store/Comments/selectors'
+import {useAppSelector, useAppDispatch} from '../../store/index'
+import {selectUserName} from '../../store/UserName/selectors'
+import {selectComments} from '../../store/Comments/selectors'
 import {addComment} from '../../store/Comments/actions'
 
 import Comment from '../Comment';
@@ -19,9 +20,9 @@ interface InputsComment{
 
 const CommentsList:FC<CommentListProps> = ({cardId}) => {
 
-  const userName = useUserNameSelector(state => state.userName.userName)
-  const comments = useCommentsSelector(state => state.comments.comments)
-  const dispatch = useCommentsDispatch()
+  const userName = useAppSelector(selectUserName)
+  const comments = useAppSelector(selectComments)
+  const dispatch = useAppDispatch()
 
   const {handleSubmit, control, reset} = useForm<InputsComment>({defaultValues:{text:""}})
   const onSubmit: SubmitHandler<InputsComment> = data =>{

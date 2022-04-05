@@ -1,20 +1,19 @@
-import React, {FC, useState, useEffect, useContext} from 'react';
+import React, {FC} from 'react';
 import styled from 'styled-components';
 
 import DefaultModal from '../../ui/DefaultModal';
 import Column from '../Column';
 import CardsList from '../CardsList';
 import UserName from '../UserName';
-import type {RootState, AppDispatch} from '../../store/index'
-import {useUserNameSelector, useUserNameDispatch} from '../../store/UserName/selectors'
-import {useColumnsSelector, useColumnsDispatch} from '../../store/Columns/selectors'
+import {useAppSelector} from '../../store/index'
+import {selectUserName} from '../../store/UserName/selectors'
+import {selectColumns} from '../../store/Columns/selectors'
 
 
 const Board:FC = () => {
 
-  const userName = useUserNameSelector(state => state.userName.userName)
-  const columns = useColumnsSelector(state => state.columns.columns)
-  const dispatch = useColumnsDispatch()
+  const userName = useAppSelector(selectUserName)
+  const columns = useAppSelector(selectColumns)
 
   const userNamePopUp = (userName===null) &&
     <DefaultModal>

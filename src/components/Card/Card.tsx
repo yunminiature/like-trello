@@ -67,7 +67,6 @@ const Card:FC<CardProps> = ({id, title, description, author, commentsCount}) => 
   });
 
   const toggleDeleteCard = () =>{
-    console.log(id, typeof id)
     dispatch(deleteCard(id))
   }
 

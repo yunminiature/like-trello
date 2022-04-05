@@ -1,10 +1,8 @@
-import React, {FC, useContext} from 'react';
+import React, {FC} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import styled from 'styled-components';
-import type {RootState, AppDispatch} from '../../store/index'
-import {useUserNameSelector, useUserNameDispatch} from '../../store/UserName/selectors'
+import {useAppDispatch} from '../../store/index'
 import {addUserName} from '../../store/UserName/actions'
-
 
 import DefaultButton from '../../ui/DefaultButton';
 import DefaultInput from '../../ui/DefaultInput';
@@ -15,10 +13,9 @@ interface InputsUserName{
 
 const UserName:FC = () => {
 
-  const userName = useUserNameSelector(state => state.userName.userName)
-  const dispatch = useUserNameDispatch()
+  const dispatch = useAppDispatch()
 
-  const {register, handleSubmit, watch, formState: {errors}} = useForm<InputsUserName>()
+  const {register} = useForm<InputsUserName>()
   const onSubmit: SubmitHandler<InputsUserName> = data =>{
     dispatch(addUserName(data.userName))
   }
@@ -44,38 +41,6 @@ const UserNamePopUp = styled.div`
   border: 0px;
   border-radius: 20px;
   background-color: #6e60ff;
-`
-
-const UserNameText = styled.p`
-  margin: 0 0 40px;
-  color: #fff;
-  font-size: 32px;
-  line-height: 32px;
-  font-weight: 600;
-`
-
-const UserNameInput = styled.input`
-  width: 70%;
-  margin: 0 60px 0 0;
-  padding: 8px 18px;
-  border: 0px;
-  border-radius: 10px;
-  background-color: #fff;
-  color: #6e60ff;
-  font-size: 24px;
-  line-height: 24px;
-  font-family: consolas;
-`
-
-const UserNameButton = styled.button`
-  padding: 11px 20px;
-  border: 0px;
-  border-radius: 10px;
-  background-color: #fff;
-  color: #6e60ff;
-  font-size: 24px;
-  line-height: 24px;
-  font-family: consolas;
 `
 
 export default UserName;

@@ -1,5 +1,4 @@
-import {RootState, AppDispatch} from '../index';
-import {useSelector, TypedUseSelectorHook, useDispatch} from 'react-redux'
+import {RootState} from '../index';
+import {CommentType} from './types';
 
-export const useCommentsSelector: TypedUseSelectorHook<RootState> = useSelector;
-export const useCommentsDispatch = () => useDispatch<AppDispatch>()
+export const selectComments = (state:RootState): CommentType[] => state.comments.comments
